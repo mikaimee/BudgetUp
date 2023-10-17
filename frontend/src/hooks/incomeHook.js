@@ -1,9 +1,11 @@
-import axios from 'axios'
-import { calculateTotalIncomeByDateRange, createIncome, deleteIncome, getAllIncomeByUser, updateIncome } from '../service/incomeService'
+import { calculateTotalIncomeByDateRange, createIncome, deleteIncome, getAllIncomeByUser, searchIncome, updateIncome, getIncomeCategories } from '../service/incomeService'
+import { useState } from 'react'
 
 export function useIncome() {
     const [isLoading, setIsLoading] = useState(false)
+    const [incomeRecords, setIncomeRecords] = useState([])
     const [totalIncome, setTotalIncome] = useState(null)
+    const [searchResults, setSearchResults] = useState([])
     const [error, setError] = useState(null)
 
     const createNewIncome = async({
@@ -13,10 +15,10 @@ export function useIncome() {
         dateReceived,
         isRecurring,
         categoryId,
+        description,
         token
     }) => {
         setIsLoading(true)
-
         try {
             const data = await createIncome({
                 source,
@@ -25,6 +27,7 @@ export function useIncome() {
                 dateReceived,
                 isRecurring,
                 categoryId,
+                description,
                 token
             })
             console.log("Created Income Data: ", data)
@@ -69,17 +72,21 @@ export function useIncome() {
         }
     }
 
-    const fetchAllIncomeByUser = async (token) => {
+    const fetchAllIncomeByUser = async ({ token }) => {
         setIsLoading(true)
+        setError(null)
+
         try {
-            const incomeRecords = await getAllIncomeByUser(token)
-            console.log("Income Records: ", incomeRecords)
+            const records = await getAllIncomeByUser(token)
+            console.log("Income Records: ", records)
+            setIncomeRecords(records)
             setIsLoading(false)
-            return incomeRecords
+            return records
         }
         catch (error) {
             setIsLoading(false)
             console.error('Error from getAllIncomeByUser:', error)
+            setError(error)
             throw error
         }
     }
@@ -99,12 +106,36 @@ export function useIncome() {
         }
     }
 
+    const searchIncomeRecords = async ({ keyword, token }) => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const results = await searchIncome(keyword, token)
+            console.log("Search Results: ", results)
+            setSearchResults(results)
+            setIsLoading(false)
+        }
+        catch (error) {
+            setIsLoading(false)
+            if (error.message === 'Token is missing') {
+                console.error('Token is missing. Make sure the token is provided.');
+            } else {
+                console.error('Error from searchIncomeRecords:', error);
+            }
+    
+            throw error
+        }
+    }
+
     return { 
         createNewIncome,
         updateIncomeData,
         deleteIncomeItem,
-        fetchAllIncomeByUser,
+        fetchAllIncomeByUser, incomeRecords,
         calculateTotalIncomeByDate,
-        isLoading
+        isLoading,
+        error,
+        searchIncomeRecords, searchResults
     }
 }

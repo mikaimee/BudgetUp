@@ -2,28 +2,17 @@ const Income = require('../model/Income')
 
 const createIncome = async (req, res) => {
     try {
-        const { source, amount, frequency, dateReceived, isRecurring, categoryId } = req.body
-        
-        const dobParts = dateReceived.split('/')
-            if (dobParts.length !== 3) {
-                return res.status(400).json({ message: "Invalid date format" })
-            }
-            const month = parseInt(dobParts[0], 10)
-            const day = parseInt(dobParts[1], 10)
-            const year = parseInt(dobParts[2], 10)
-            if (isNaN(month) || isNaN(day) || isNaN(year)) {
-                return res.status(400).json({ message: "Invalid date format" })
-            }
-            const parsedDateReceived = new Date(year, month - 1, day)
+        const { source, amount, frequency, dateReceived, isRecurring, categoryId, description } = req.body
 
         const income = new Income({
             userId: req.user._id,
             source,
             amount,
             frequency,
-            dateReceived: parsedDateReceived,
+            dateReceived,
             isRecurring,
-            categoryId
+            categoryId,
+            description
         })
 
         await income.save()
