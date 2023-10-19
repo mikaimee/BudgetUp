@@ -2,7 +2,8 @@ import {
     createExpense, 
     getAllExpenseByUser, 
     updateExpense,
-    deleteExpense 
+    deleteExpense,
+    searchExpense
 } from "../service/expenseService";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
@@ -79,4 +80,17 @@ export const useDeleteExpenseMutation = (queryClient) => {
             }
         }
     )
+}
+
+//WIP
+export const useSearchExpense = ({ keyword, token }) => {
+    return useQuery(['searchExpense'], () => searchExpense(keyword, token), {
+        onSuccess: (data) => {
+            console.log("Search Results: ", data)
+        },
+        onError: (error) => {
+            console.error('Error deleting expense', error)
+            toast.error(error.message)
+        }
+    })
 }

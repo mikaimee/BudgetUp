@@ -32,6 +32,7 @@ const SearchIncome = () => {
             <button onClick={handleSearch}>Search</button>
             {isLoading && <p>Loading...</p>}
             {error && <p>Error: {error.message}</p>}
+            
             {searchResults.length > 0 && (
                 <ul>
                     {searchResults.map((result) => (
