@@ -3,25 +3,13 @@ const Expense = require('../model/Expense')
 const createExpense = async (req, res) => {
     try {
         const { vendor, amount, method, dateOfExpense, isRecurring, categoryId } = req.body
-        
-        const dobParts = dateOfExpense.split('/')
-            if (dobParts.length !== 3) {
-                return res.status(400).json({ message: "Invalid date format" })
-            }
-            const month = parseInt(dobParts[0], 10)
-            const day = parseInt(dobParts[1], 10)
-            const year = parseInt(dobParts[2], 10)
-            if (isNaN(month) || isNaN(day) || isNaN(year)) {
-                return res.status(400).json({ message: "Invalid date format" })
-            }
-            const parsedDate = new Date(year, month - 1, day)
 
         const expense = new Expense({
             userId: req.user._id,
             vendor,
             amount,
             method,
-            dateOfExpense: parsedDate,
+            dateOfExpense,
             isRecurring,
             categoryId
         })
@@ -60,7 +48,7 @@ const deleteExpense = async (req, res) => {
         if (!result) {
             return res.status(404).json({ message: 'Expense not found' })
         }
-        res.status(200).json({ messgae: "Expense deleted successfully" })
+        res.status(200).json({ message: "Expense deleted successfully" })
     }
     catch (error) {
         console.error(error)

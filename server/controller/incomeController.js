@@ -2,7 +2,7 @@ const Income = require('../model/Income')
 
 const createIncome = async (req, res) => {
     try {
-        const { source, amount, frequency, dateReceived, isRecurring, categoryId, description } = req.body
+        const { source, amount, frequency, dateReceived, isRecurring, categoryId } = req.body
 
         const income = new Income({
             userId: req.user._id,
@@ -11,8 +11,7 @@ const createIncome = async (req, res) => {
             frequency,
             dateReceived,
             isRecurring,
-            categoryId,
-            description
+            categoryId
         })
 
         await income.save()
@@ -171,6 +170,21 @@ const groupIncomeByCategory = async (req, res) => {
     }
 }
 
+const filterIncomesByCategory = async (req, res) => {
+    try {
+        const categoryId = req.query.categoryId
+        if(!categoryId) {
+            return res.status(400).json({ message: 'categoryId does not exist' })
+        }
+        const incomes = await Income.find({ categoryId })
+        return res.status(200).json({ incomes })
+    }
+    catch (error) {
+        console.error(error)
+        res.status(500).json({ error: "An error occured while filtering income by category"})
+    }
+}
+
 
 module.exports = {
     createIncome,
@@ -180,5 +194,6 @@ module.exports = {
     filterIncomeByDateRange,
     calculateTotalIncomeByDateRange,
     searchIncome,
-    groupIncomeByCategory
+    groupIncomeByCategory,
+    filterIncomesByCategory
 }

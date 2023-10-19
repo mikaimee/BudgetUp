@@ -1,5 +1,7 @@
 import { getAllCategory } from '../service/categoryService'
 import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 export function useCategory() {
     const [isLoading, setIsLoading] = useState(false)
@@ -25,6 +27,18 @@ export function useCategory() {
     return {
         error,
         isLoading,
-        fetchAllCategories, categories,
+        fetchAllCategories, categories
     }
+}
+
+export const AllCategories = () => {
+    return useQuery(['allCategories'], getAllCategory, {
+        onSuccess: (data) => {
+            console.log("All Categories", data)
+        },
+        onError: (error) => {
+            toast.error(error.message)
+            console.error(error)
+        }
+    })
 }

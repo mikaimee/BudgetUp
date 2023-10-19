@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
 import IncomeTable from './IncomeTable'
 import SearchIncome from './SearchIncome'
-import IncomeFilter from './IncomeFilter'
+import CreateIncome from './CreateIncome'
 
 const Income = () => {
 
@@ -10,6 +9,7 @@ const Income = () => {
         <div>
             <IncomeTable />
             <SearchIncome />
+            <CreateIncome />
         </div>
     )
 }

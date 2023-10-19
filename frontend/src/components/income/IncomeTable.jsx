@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useIncome } from '../../hooks/incomeHook'
 import { useSelector } from 'react-redux'
-import CreateIncome from './CreateIncome'
 import IncomeFilter from './IncomeFilter'
 
 const IncomeTable = () => {

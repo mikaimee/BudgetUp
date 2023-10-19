@@ -1,76 +1,23 @@
-import { calculateTotalIncomeByDateRange, createIncome, deleteIncome, getAllIncomeByUser, searchIncome, updateIncome, getIncomeCategories } from '../service/incomeService'
+import { 
+    calculateTotalIncomeByDateRange, 
+    filterIncomeByCategory, 
+    createIncome, 
+    deleteIncome, 
+    getAllIncomeByUser, 
+    searchIncome, 
+    updateIncome, 
+    getIncomeCategories 
+} from '../service/incomeService'
 import { useState } from 'react'
 
 export function useIncome() {
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+
     const [incomeRecords, setIncomeRecords] = useState([])
     const [totalIncome, setTotalIncome] = useState(null)
     const [searchResults, setSearchResults] = useState([])
-    const [error, setError] = useState(null)
-
-    const createNewIncome = async({
-        source,
-        amount,
-        frequecy,
-        dateReceived,
-        isRecurring,
-        categoryId,
-        description,
-        token
-    }) => {
-        setIsLoading(true)
-        try {
-            const data = await createIncome({
-                source,
-                amount,
-                frequecy,
-                dateReceived,
-                isRecurring,
-                categoryId,
-                description,
-                token
-            })
-            console.log("Created Income Data: ", data)
-            setIsLoading(false)
-            return data
-        }
-        catch (error) {
-            setIsLoading(false)
-            console.error('Error from createIncome:', error)
-            throw error
-        }
-    }
-
-    const updateIncomeData = async ({ incomeId, updatedIncomeData, token }) => {
-        setIsLoading(true)
-        
-        try {
-            const data = await updateIncome({ incomeId, updatedIncomeData, token })
-            console.log("Updated Income Data: ", data)
-            setIsLoading(false)
-            return data
-        }
-        catch (error) {
-            setIsLoading(false)
-            console.error('Error from updateIncome:', error)
-            throw error
-        }
-    }
-
-    const deleteIncomeItem = async({ incomeId, token }) => {
-        setIsLoading(true)
-        try {
-            const data = await deleteIncome({ incomeId, token })
-            console.log("Deleted Income Data: ", data)
-            setIsLoading(false)
-            return data
-        }
-        catch (error) {
-            setIsLoading(false)
-            console.error('Error from deleteIncome:', error)
-            throw error
-        }
-    }
+    const [filteredIncomes, setFilteredIncomes] = useState([])
 
     const fetchAllIncomeByUser = async ({ token }) => {
         setIsLoading(true)
@@ -87,21 +34,6 @@ export function useIncome() {
             setIsLoading(false)
             console.error('Error from getAllIncomeByUser:', error)
             setError(error)
-            throw error
-        }
-    }
-
-    const calculateTotalIncomeByDate = async(token, startDate, endDate) => {
-        setIsLoading(true)
-        try {
-            const totalIncome = await calculateTotalIncomeByDateRange(token, startDate, endDate)
-            console.log("Total Income Records: ", totalIncome)
-            setIsLoading(false)
-            return totalIncome
-        }
-        catch (error) {
-            setIsLoading(false)
-            console.error('Error from calculateTotalIncomeByDateRange:', error)
             throw error
         }
     }
@@ -128,14 +60,32 @@ export function useIncome() {
         }
     }
 
+    const filterIncomeByCategory = async ({ categoryId, token }) => {
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const results = await filterIncomeByCategory(categoryId, token)
+            console.log("Filtered Results: ", results)
+            setFilteredIncomes(results)
+            setIsLoading(false)
+        }
+        catch (error) {
+            setIsLoading(false)
+            if (error.message === 'Token is missing') {
+                console.error('Token is missing. Make sure the token is provided.');
+            } else {
+                console.error('Error filtering incomes:', error);
+            }
+            throw error
+        }
+    }
+
     return { 
-        createNewIncome,
-        updateIncomeData,
-        deleteIncomeItem,
-        fetchAllIncomeByUser, incomeRecords,
-        calculateTotalIncomeByDate,
         isLoading,
         error,
-        searchIncomeRecords, searchResults
+        fetchAllIncomeByUser, incomeRecords,
+        searchIncomeRecords, searchResults,
+        filterIncomeByCategory, filteredIncomes
     }
 }

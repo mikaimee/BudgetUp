@@ -3,11 +3,10 @@ import axios from 'axios'
 export const createIncome = async ({
     source,
     amount,
-    frequecy,
+    frequency,
     dateReceived,
     isRecurring,
     categoryId,
-    description,
     token
 }) => {
     try {
@@ -17,11 +16,10 @@ export const createIncome = async ({
         const { data } = await axios.post('http://localhost:8000/incomes', {
             source,
             amount,
-            frequecy,
-            dateReceived,
+            frequency,
+            dateReceived: new Date(dateReceived),
             isRecurring,
-            categoryId,
-            description
+            categoryId
         }, { headers }) 
         return data
     }
@@ -134,13 +132,29 @@ export const searchIncome = async (keyword, token) => {
     }
 }
 
-export const getIncomeCategories = async ({token}) => {
+export const groupIncomeCategories = async ({token}) => {
     try {
         const headers = {
             Authorization: `Bearer ${token}`
         }
         const response = await axios.get('http://localhost:8000/incomes/groupByCategory', headers)
         return response.data.incomeCategories
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(err.response.data.message)
+        }
+        throw new Error(err.message)
+    }
+}
+
+export const filterIncomeByCategory = async (categoryId, token) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${token}`
+        }
+        const response = await axios.get(`http://localhost:8000/incomes/byCategory?categoryId=${categoryId}`, headers)
+        return response.data
     }
     catch (err) {
         if (err.response && err.response.data.message) {

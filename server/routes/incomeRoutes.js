@@ -25,4 +25,7 @@ router.route('/search')
 router.route('/groupByCategory')
     .get(protection.authProtect, iController.groupIncomeByCategory)
 
+router.route('/byCategory')
+    .get(protection.authProtect, iController.filterIncomesByCategory)
+    
 module.exports = router

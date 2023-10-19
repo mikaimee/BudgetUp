@@ -6,11 +6,12 @@ export const getAllCategory = async () => {
         if (response.status === 200) {
             return response.data.categories
         }
+        throw new Error('Failed to fetch categories')
     }
     catch (err) {
         if (err.response && err.response.data.message) {
             throw new Error(err.response.data.message)
         }
-        throw new Error(err.message)
+        throw err
     }
 }
