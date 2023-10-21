@@ -103,13 +103,12 @@ export const deleteExpense = async({ expenseId, token}) => {
     }
 }
 
-// WIP
 export const searchExpense = async (keyword, token) => {
     try {
         const headers = {
             Authorization: `Bearer ${token}`
         }
-        const response = await axios.get('http://localhost:8000/expenses/search', { 
+        const response = await axios.get('http://localhost:8000/expenses/search', {
             params: { keyword },
             headers
         })

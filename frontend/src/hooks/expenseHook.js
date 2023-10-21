@@ -7,6 +7,7 @@ import {
 } from "../service/expenseService";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
 
 export const useCreateExpenseMutation = (queryClient) => {
     return useMutation(
@@ -82,15 +83,33 @@ export const useDeleteExpenseMutation = (queryClient) => {
     )
 }
 
-//WIP
-export const useSearchExpense = ({ keyword, token }) => {
-    return useQuery(['searchExpense'], () => searchExpense(keyword, token), {
-        onSuccess: (data) => {
-            console.log("Search Results: ", data)
-        },
-        onError: (error) => {
-            console.error('Error deleting expense', error)
-            toast.error(error.message)
+
+export function useSearch() {
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [searchResults, setSearchResults] = useState([])
+
+    const  searchExpenseRecords = async ({ keyword, token }) => {
+
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            const results = await searchExpense(keyword, token)
+            console.log("Search Results: ", results)
+            setSearchResults(results)
+            setIsLoading(false)
         }
-    })
+        catch (error) {
+            setIsLoading(false)
+            if (error.message === 'Token is missing') {
+                console.error('Token is missing. Make sure the token is provided.');
+            } else {
+                console.error('Error from searchExpenseRecords:', error);
+            }
+
+            throw error
+        }
+    }
+    return {searchExpenseRecords, isLoading, error, searchResults}
 }
