@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useCreateExpenseMutation, useUpdateExpenseMutation } from '../../hooks/expenseHook'
-import { AllCategories } from '../../hooks/categoryHook'
 import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
+import { useAllCategories } from '../../hooks/categoryHook'
+import mongoose from 'mongoose'
 
 const CreateExpense = ({ selectedExpense, onEditCancel }) => {
 
@@ -23,9 +24,9 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
     const [expenseData, setExpenseData] = useState(initialExpenseData)
     const [isUpdateMode, setIsUpdateMode] = useState(false)
 
-    // state to store selected category
+    // State to store selected category
     const [selectedCategoryId, setSelectedCategoryId] = useState('')
-    const {data: categories } = AllCategories()
+    const { data: categories, isLoading: categoriesLoading, isError: categoriesError } = useAllCategories()
 
     // handle edit cancel button
     const handleEditCancel = () => {
@@ -34,16 +35,19 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
         // Reset thr form data to its initial state
         setExpenseData(initialExpenseData)
         setIsUpdateMode(false)
+        setSelectedCategoryId('')
     }
 
     // Effect to update the form when selectedExpense changes
     useEffect(() => {
         if (selectedExpense) {
             setExpenseData(selectedExpense)
+            setSelectedCategoryId(selectedExpense.categoryId)
             setIsUpdateMode(true)
         }
         else {
             setExpenseData(initialExpenseData)
+            setSelectedCategoryId('')
             setIsUpdateMode(false)
         }
     }, [selectedExpense])
@@ -51,7 +55,8 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
     const { isLoading: createLoading, mutate: createMutate } = useCreateExpenseMutation(queryClient)
     const { isLoading: updateLoading, mutate: updateMutate } = useUpdateExpenseMutation(queryClient, onEditCancel)
 
-    const handleCreateOrUpdateExpense = async () => {
+    const handleCreateOrUpdateExpense = async (e) => {
+        e.preventDefault()
         if (expenseData.categoryId.trim() === '') {
             return
         }
@@ -73,7 +78,8 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
                     ...expenseData, 
                     dateOfExpense: formattedDate,
                     token: userState?.userInfo?.token,
-                    _id: selectedExpense._id
+                    _id: selectedExpense._id,
+                    categoryId: selectedCategoryId,
                 }
 
                 updateMutate({
@@ -89,13 +95,23 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
         }
         else {
             try {
-                const result = await createMutate(expenseData)
-                console.log("Created Expense: ", result)
+                if (!selectedCategoryId) {
+                    // Handle the case where no category is selected.
+                    console.log('Category not selected')
+                    toast.error('Please select a category')
+                    return
+                }
+                const createdExpenseData = {
+                    ...expenseData,
+                    categoryId: selectedCategoryId,
+                }
+                
+                const result = await createMutate(createdExpenseData)
                 setExpenseData(initialExpenseData)
             }
             catch (error) {
-                toast.error(error.message)
                 console.error(error)
+                toast.error(error.message)
             }
         }
     }
@@ -147,15 +163,33 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
                 />
             </div>
             <div>
-                <label>Category Id:</label>
-                <input
-                    type="text"
-                    value={expenseData.categoryId}
-                    onChange={(e) => setExpenseData({ ...expenseData, categoryId: (e.target.value) })}
-                />
+                <label>Category Name:</label>
+                <select
+                    value={selectedCategoryId}
+                    onChange={(e) => {
+                        // console.log('Selected Category ID:', e.target.value)
+                        setSelectedCategoryId(e.target.value)
+                            setExpenseData({ ...expenseData, categoryId: e.target.value })
+                    }}
+                >
+                <option value="">Select a category</option>
+                {categoriesLoading ? (
+                    <option>Loading categories...</option>
+                ) : categoriesError ? (
+                    <option>Error loading categories</option>
+                ) : (
+                    categories
+                    .filter((category) => category.type === 'expense')
+                    .map((category) => (
+                        <option key={category._id} value={category._id}>
+                            {category.name}
+                        </option>
+                    ))
+                )}
+                </select>
             </div>
             {/* Include other input fields for expense data here */}
-            <button onClick={handleCreateOrUpdateExpense}>
+            <button onClick={handleCreateOrUpdateExpense} disabled={isUpdateMode ? updateLoading : createLoading}>
                 {isUpdateMode ? (updateLoading ? 'Updating...' : 'Update Expense') : (createLoading ? 'Creating...' : 'Create Expense')}
             </button>
             {isUpdateMode && <button onClick={handleEditCancel}>Cancel</button>}

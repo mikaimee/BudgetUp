@@ -83,7 +83,6 @@ export const useDeleteExpenseMutation = (queryClient) => {
     )
 }
 
-
 export function useSearch() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)

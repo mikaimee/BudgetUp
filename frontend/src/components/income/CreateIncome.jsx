@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { createIncome } from '../../service/incomeService'
-import { useCategory } from '../../hooks/categoryHook'
+import { useAllCategories } from '../../hooks/categoryHook'
 
 const CreateIncome = () => {
 
     const userState = useSelector((state) => state.user)
-    const { isLoading, error, fetchAllCategories, categories } = useCategory
 
     const [incomeData, setIncomeData] = useState({
         source: '',
@@ -22,13 +21,6 @@ const CreateIncome = () => {
         setIncomeData({
             ...incomeData,
             [name]: type === 'checkbox' ? checked: value
-        })
-    }
-
-    const handleCategoryChange = (e) => {
-        setIncomeData({
-            ...incomeData,
-            categoryId: e.target.value,
         })
     }
 
