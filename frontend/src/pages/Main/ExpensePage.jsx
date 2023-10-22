@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
-import { ResponsivePie } from '@nivo/pie'
 import { useGetExpensesByUser } from '../../hooks/expenseHook'
 
 import CreateExpense from '../../components/expense/CreateExpense'
 import TableExpense from '../../components/expense/TableExpense'
 import SearchExpense from '../../components/expense/SearchExpense'
 import ExpensePie from '../../components/expense/ExpensePie'
+import YearlyExpensePie from '../../components/expense/YearlyExpensePie'
 
 const ExpensePage = () => {
 
@@ -30,12 +30,9 @@ const ExpensePage = () => {
         return <div>Error fetching expenses</div>;
     }
 
-
     const handleEditCancel = () => {
         setSelectedExpense(null)
     }
-
-    console.log("EXPWNSE>JSX: ", filteredExpenses)
 
     return (
         <div>
@@ -48,6 +45,7 @@ const ExpensePage = () => {
             />
             <SearchExpense />
             <ExpensePie data={filteredExpenses} />
+            <YearlyExpensePie data={expenseData} />
         </div>
     )
 }

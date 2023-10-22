@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useGetExpensesByUser, useDeleteExpenseMutation } from '../../hooks/expenseHook'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-const TableExpense = ({ setSelectedExpense, data }) => {
+const TableExpense = ({ setSelectedExpense, data, setFilteredExpenses }) => {
 
     const queryClient = useQueryClient()
     const userState = useSelector((state) => state.user)
@@ -31,31 +31,30 @@ const TableExpense = ({ setSelectedExpense, data }) => {
         })
     }
 
-    // Apply filtering based on displayed month and year
-    const filteredExpenses = data && Array.isArray(data)
-        ? filterExpenses(data, displayedYear, displayedMonth)
-        : []
+    // State variable for sorted expenses
+    const [sortedExpenses, setSortedExpenses] = useState([])
 
-    // 1. Create copy of 'expenses' array using spread b/c you don't want to modify origial array
-    // 2. Use sort method to arrange elements in array
-    // 3. Compare two expenses denoted as 'a' an 'b' based on 'dateOfExpense' properties
-    // 4. Use 'new Date' constructor to convert into Date objects
-    // 5. By subtracting 'new Date(b.dateOfExpense) - new Date(a.dateOfExpense), get a positive value if 'b' date is greater (more recent)
-    // 6. Results in 'b' being placed before 'a' in sorted array
-    const sortedExpenses = [...filteredExpenses].sort((a, b) => 
-        new Date(b.dateOfExpense) - new Date(a.dateOfExpense))
-    
+    // Function to update filtered and sorted expenses
+    const updateFilteredExpenses = () => {
+        const newFilteredExpenses  = data && Array.isArray(data)
+            ? filterExpenses(data, displayedYear, displayedMonth)
+            : []
+        
+        // Sort the newFilteredExpenses
+        const sortedExpenses = [...newFilteredExpenses].sort((a, b) => 
+            new Date(b.dateOfExpense) - new Date(a.dateOfExpense))
+        
+        // Set sortedExpenses using the state variable
+        setSortedExpenses(sortedExpenses)
+        setFilteredExpenses(sortedExpenses)
+    }
+
+    // Apply filtering based on displayed month and year
+    useEffect(() => {
+        updateFilteredExpenses()
+    }, [data, displayedYear, displayedMonth, setFilteredExpenses])
 
     // Function to update diplayed month and year
-    // 1. Use 'setDisplayedMonth' state to update 'displayedMonth'
-    // 2. Calculate the new month by adding the 'change' value to previous month
-        // a) if change is -1, it means moving to previous month so it subtracts 1 from previous month
-        // b) if change is 1, it means moving to next month
-    // 3. Check if new month is less than 1, which indicates that you are moving to previous year
-        // a) if new month is less than 1 and updating the year, it returns 12 (December)
-    // 4. Check if new month is greater than 12, indicating transition to next year
-        // a) if new month is greater than 12, it returns 1 after updating year
-    // 5. If new month falls within the range of 1 - 12, it returns the new month as it is
     const handleMonthChange = (change) => {
         setDisplayedMonth((prevMonth) => {
             const newMonth = prevMonth + change

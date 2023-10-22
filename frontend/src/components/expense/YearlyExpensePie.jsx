@@ -1,11 +1,19 @@
 import React from 'react'
 import { ResponsivePie } from '@nivo/pie'
 
-const ExpensePie = ({ data }) => {
+const YearlyExpensePie = ({ data }) => {
+
+    // Get current year
+    const currentYear = new Date().getFullYear()
+
+    const currentYearData = data.filter((exp) => {
+        const expenseYear = new Date(exp.dateOfExpense).getFullYear()
+        return expenseYear === currentYear
+    })
 
     // Function to transform data for pie chart
     const transformData = (data) => {
-        // Create object to store categeory total
+        // Create object to store category totals
         const categoryTotals = {}
 
         data.forEach((exp) => {
@@ -28,14 +36,16 @@ const ExpensePie = ({ data }) => {
             id: `${categoryName}`,
             value: categoryTotals[categoryName],
         }))
-    
+
         return pieChartData
     }
 
-    const pieChartData = transformData(data)
+    // Transform the current year data into pie chart data
+    const pieChartData = transformData(currentYearData)
 
     return (
         <div>
+            <h2>Yearly Expense Pie Chart ({currentYear})</h2>
             <div style={{ height: '400px' }}>
                 <ResponsivePie
                     data={pieChartData} 
@@ -104,4 +114,4 @@ const ExpensePie = ({ data }) => {
     )
 }
 
-export default ExpensePie
+export default YearlyExpensePie
