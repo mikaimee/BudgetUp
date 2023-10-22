@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
+import { ResponsivePie } from '@nivo/pie'
 import { useGetExpensesByUser } from '../../hooks/expenseHook'
-import { ResponsivePie } from '@nivo/pie';
 
-import CreateExpense from './CreateExpense'
-import TableExpense from './TableExpense'
-import SearchExpense from './SearchExpense'
-import ExpensePie from './ExpensePie'
+import CreateExpense from '../../components/expense/CreateExpense'
+import TableExpense from '../../components/expense/TableExpense'
+import SearchExpense from '../../components/expense/SearchExpense'
+import ExpensePie from '../../components/expense/ExpensePie'
 
-const Expense = () => {
+const ExpensePage = () => {
+
     const [selectedExpense, setSelectedExpense] = useState(null)
+    const [filteredExpenses, setFilteredExpenses] = useState([])
     const queryClient = useQueryClient();
     const userState = useSelector((state) => state.user)
 
@@ -20,9 +22,6 @@ const Expense = () => {
         isError
     } = useGetExpensesByUser(userState?.userInfo?.token)
 
-    console.log('expense!')
-    console.log("FROM EXPENSE.JSX", expenseData)
-
     if (expenseLoading) {
         return <div>Loading...</div>;
     }
@@ -31,19 +30,26 @@ const Expense = () => {
         return <div>Error fetching expenses</div>;
     }
 
+
     const handleEditCancel = () => {
         setSelectedExpense(null)
     }
 
+    console.log("EXPWNSE>JSX: ", filteredExpenses)
 
     return (
         <div>
             <CreateExpense selectedExpense={selectedExpense} onEditCancel={handleEditCancel} />
-            <TableExpense setSelectedExpense={setSelectedExpense} data={expenseData} />
+            <TableExpense 
+                setSelectedExpense={setSelectedExpense} 
+                data={expenseData} 
+                filteredExpenses={filteredExpenses}
+                setFilteredExpenses={setFilteredExpenses}
+            />
             <SearchExpense />
-            <ExpensePie data={expenseData} />
+            <ExpensePie data={filteredExpenses} />
         </div>
     )
 }
 
-export default Expense
+export default ExpensePage

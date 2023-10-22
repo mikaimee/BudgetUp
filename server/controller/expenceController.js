@@ -60,6 +60,8 @@ const getAllExpenseByUser = async (req, res) => {
     try{
         const { _id } = req.user
         const expenseRecords = await Expense.find({ userId: _id })
+            .populate('categoryId')
+            .exec()
         return res.status(200).json({ expenseRecords })
     }
     catch (error) {
