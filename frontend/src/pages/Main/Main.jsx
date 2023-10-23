@@ -6,49 +6,49 @@ import Badge from '@mui/material/Badge';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import MuiDrawer from '@mui/material/Drawer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
+import List from '@mui/material/List';
+import SavingsIcon from '@mui/icons-material/Savings';
+
+import Nav from '../../components/Nav';
+
+const drawerWidth = 240;
 
 const Main = () => {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(true)
+
     const toggleDrawer = () => {
         setOpen(!open);
     }
 
-    const mainListItems = (
-        <div>
-            <Link href="#" variant="body2">
-                Link 1
-            </Link>
-            <Link href="#" variant="body2">
-                Link 2
-            </Link>
-            <Link href="#" variant="body2">
-                Link 3
-            </Link>
-            </div>
-        );
-    
-    const secondaryListItems = (
-        <div>
-            <Link href="#" variant="body2">
-                Link 1
-            </Link>
-            <Link href="#" variant="body2">
-                Link 2
-            </Link>
-        </div>
-    )
-
     return (
         <ThemeProvider theme={createTheme()}>
+            <CssBaseline />
             <Box sx={{ display: 'flex' }}>
-                <CssBaseline />
-                <AppBar position="absolute" open={open}>
-                    <Toolbar
-                        sx={{
-                        pr: '24px', // keep right padding when drawer closed
-                        }}
-                    >
+                <AppBar 
+                    position="absolute" 
+                    open={open}
+                    sx={{
+                        zIndex: (theme) => theme.zIndex.drawer + 1,
+                        transition: (theme) => 
+                            theme.transitions.create(['width', 'margin'], {
+                                easing: theme.transitions.easing.sharp,
+                                duration: theme.transitions.duration.leavingScreen
+                            }),
+                        ...(open && {
+                            marginLeft: drawerWidth,
+                            width: `calc(100% - ${drawerWidth}px)`,
+                            transition: (theme) =>
+                                theme.transitions.create(['width', 'margin'], {
+                                    easing: theme.transitions.easing.sharp,
+                                    duration: theme.transitions.duration.enteringScreen
+                                })
+                        })
+                    }}
+                >
+                    <Toolbar>
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -59,7 +59,7 @@ const Main = () => {
                                 ...(open && { display: 'none' }),
                             }}
                         >
-                        <MenuIcon />
+                            <ViewHeadlineIcon />
                         </IconButton>
                         <Typography
                             component="h1"
@@ -68,16 +68,57 @@ const Main = () => {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                        Dashboard
+                            Dashboard
                         </Typography>
-                        <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                        </IconButton>
                     </Toolbar>
                 </AppBar>
                 <Divider />
+                <MuiDrawer
+                    variant='permanent'
+                    open={open}
+                    sx={(theme) => ({
+                        '& .MuiDrawer-paper': {
+                            position: 'relative',
+                            whiteSpace: 'nowrap',
+                            width: drawerWidth,
+                            ...(open
+                                ? {
+                                    transition: theme.transitions.create('width', {
+                                        easing: theme.transitions.easing.sharp,
+                                        duration: theme.transitions.duration.enteringScreen
+                                    })
+                                }
+                                : {
+                                    transition: theme.transitions.create('width', {
+                                        easing: theme.transitions.easing.sharp,
+                                        duration: theme.transitions.duration.leavingScreen
+                                    }),
+                                    width: theme.spacing(7),
+                                    [theme.breakpoints.up('sm')]: {
+                                        width: theme.spacing(9)
+                                    }
+                                }
+                            )
+                        }
+                    })}
+                >
+                    <Toolbar
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            px: [1]
+                        }}
+                    >
+                        <IconButton onClick={toggleDrawer}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </Toolbar>
+                    <Divider />
+                    <List>
+                        <Nav />
+                    </List>
+                </MuiDrawer>
                 <Box
                     component="main"
                     sx={{
