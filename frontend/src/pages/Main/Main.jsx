@@ -15,6 +15,9 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import Nav from '../../components/Nav';
 import ExpensePage from './ExpensePage'
 import DashboardPage from './DashboardPage';
+import IncomePage from './IncomePage';
+import SavingsPage from './SavingsPage';
+import Budget from './Budget';
 
 const drawerWidth = 240;
 
@@ -147,9 +150,24 @@ const Main = () => {
                                 <DashboardPage />
                             </Grid>
                         )}
+                        {selectedNavItem === 'Income' && (
+                            <Grid container spacing={3}>
+                                <IncomePage />
+                            </Grid>
+                        )}
                         {selectedNavItem === 'Expense' && (
                             <Grid container spacing={3}>
                                 <ExpensePage />
+                            </Grid>
+                        )}
+                        {selectedNavItem === 'Savings' && (
+                            <Grid container spacing={3}>
+                                <SavingsPage />
+                            </Grid>
+                        )}
+                        {selectedNavItem === 'Budget' && (
+                            <Grid container spacing={3}>
+                                <Budget />
                             </Grid>
                         )}
                         {/* <Grid container spacing={3}>
