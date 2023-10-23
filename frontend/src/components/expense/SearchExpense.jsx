@@ -2,6 +2,15 @@ import React, {useState} from 'react'
 import { useSelector } from 'react-redux'
 import { useSearch } from '../../hooks/expenseHook'
 
+import { TextField, Paper, Button, Grid, InputAdornment, Typography, Avatar, Link, Container, createTheme, ThemeProvider, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Box from '@mui/material/Box';
+
+const tableHeadStyle = {
+    fontWeight: 'bold'
+};
+
 const SearchExpense = () => {
 
     const [searchTerm, setSearchTerm] = useState('')
@@ -22,25 +31,64 @@ const SearchExpense = () => {
     }
 
     return (
-        <div>
-            <input
-                type="text"
-                placeholder="Search keyword"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button onClick={handleSearch}>Search</button>
-            {isLoading && <p>Loading...</p>}
-            {error && <p>Error: {error.message}</p>}
-            
-            {searchResults.length > 0 && (
-                <ul>
-                    {searchResults.map((result) => (
-                        <li key={result._id}>{result.vendor}</li>
-                    ))}
-                </ul>
-            )}
-        </div>
+        <Container component="main" maxWidth="lg">
+            <CssBaseline />
+            <div>
+                <Typography component='h2' variant='h5'>
+                    Search Expenses
+                </Typography>
+                <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    label="Search keyword"
+                    name="searchTerm"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    InputProps={{
+                        endAdornment: (
+                        <InputAdornment position="end">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSearch}
+                            >
+                                Search
+                            </Button>
+                        </InputAdornment>
+                        )
+                    }}
+                />
+                <div style={{ marginTop: '20px' }}>
+                    {isLoading && <Typography>Loading...</Typography>}
+                    {error && <Typography>Error: {error.message}</Typography>}
+                </div>
+                <div style={{ marginTop: '20px' }}>
+                    {searchResults.length > 0 && (
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell style={tableHeadStyle}>Vendor</TableCell>
+                                        <TableCell style={tableHeadStyle}>Date</TableCell>
+                                        <TableCell style={tableHeadStyle}>Amount</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {searchResults.map((result) => (
+                                    <TableRow key={result._id}>
+                                        <TableCell>{result.vendor}</TableCell>
+                                        <TableCell>{new Date(result.dateOfExpense).toLocaleDateString()}</TableCell>
+                                        <TableCell>${result.amount.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    )}
+                </div>
+            </div>
+        </Container>
     )
 
 }

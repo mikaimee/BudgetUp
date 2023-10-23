@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, CssBaseline, Container, Grid, Paper, Typography, Link, Divider, Toolbar } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, CssBaseline, Container, Grid, Typography, Link, Divider, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
@@ -13,14 +13,23 @@ import List from '@mui/material/List';
 import SavingsIcon from '@mui/icons-material/Savings';
 
 import Nav from '../../components/Nav';
+import ExpensePage from './ExpensePage'
+import DashboardPage from './DashboardPage';
 
 const drawerWidth = 240;
 
 const Main = () => {
     const [open, setOpen] = React.useState(true)
+    const [selectedNavItem, setSelectedNavItem] = useState('Dashboard')
+    const [headerTitle, setHeaderTitle] = useState('Dashboard')
 
     const toggleDrawer = () => {
         setOpen(!open);
+    }
+
+    const handleNavItemClick = (item) => {
+        setHeaderTitle(item)
+        setSelectedNavItem(item)
     }
 
     return (
@@ -68,7 +77,7 @@ const Main = () => {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                            Dashboard
+                            {headerTitle}
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -116,7 +125,7 @@ const Main = () => {
                     </Toolbar>
                     <Divider />
                     <List>
-                        <Nav />
+                        <Nav handleNavItemClick={handleNavItemClick} />
                     </List>
                 </MuiDrawer>
                 <Box
@@ -132,8 +141,18 @@ const Main = () => {
                     }}
                 >
                     <Toolbar />
-                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                        <Grid container spacing={3}>
+                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, ml: 4 }}>
+                        {selectedNavItem === 'Dashboard' && (
+                            <Grid container spacing={3}>
+                                <DashboardPage />
+                            </Grid>
+                        )}
+                        {selectedNavItem === 'Expense' && (
+                            <Grid container spacing={3}>
+                                <ExpensePage />
+                            </Grid>
+                        )}
+                        {/* <Grid container spacing={3}>
                             <Grid item xs={12} md={8} lg={9}>
                                 <Paper
                                     sx={{
@@ -178,7 +197,7 @@ const Main = () => {
                                     </Typography>
                                 </Paper>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                     </Container>
                 </Box>
             </Box>

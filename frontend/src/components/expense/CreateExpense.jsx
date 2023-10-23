@@ -4,7 +4,11 @@ import { useCreateExpenseMutation, useUpdateExpenseMutation } from '../../hooks/
 import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAllCategories } from '../../hooks/categoryHook'
-import mongoose from 'mongoose'
+
+import { TextField, Button, Grid, Checkbox, Typography, Avatar, Link, Container, createTheme, ThemeProvider, MenuItem } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Box from '@mui/material/Box';
 
 const CreateExpense = ({ selectedExpense, onEditCancel }) => {
 
@@ -117,83 +121,130 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
     }
 
     return (
-        <div>
-            <h1>{isUpdateMode ? 'Update Expense' : 'Create Expense'}</h1>
+        <Container component='main' maxWidth='xs'>
+            <CssBaseline />
             <div>
-                <label>Vendor:</label>
-                <input
-                    type="text"
-                    value={expenseData.vendor}
-                    onChange={(e) => setExpenseData({ ...expenseData, vendor: e.target.value })}
-                />
+                <Typography component='h2' variant='h5'>
+                    {isUpdateMode ? 'Update Expense' : 'Create Expense'}
+                </Typography>
+                <form>
+                    <TextField
+                        variant='outlined'
+                        margin='normal'
+                        required
+                        fullWidth
+                        id='vendor'
+                        label="Vendor"
+                        name='vendor'
+                        autoComplete='vendor'
+                        autoFocus
+                        value={expenseData.vendor}
+                        onChange={(e) => setExpenseData({ ...expenseData, vendor: e.target.value })}
+                    />
+                    <TextField
+                        variant='outlined'
+                        margin='normal'
+                        required
+                        fullWidth
+                        id='amount'
+                        label="Amount"
+                        name='amount'
+                        type="number"
+                        value={expenseData.amount}
+                        onChange={(e) => setExpenseData({ ...expenseData, amount: parseFloat(e.target.value) })}
+                    />
+                    <TextField
+                        variant='outlined'
+                        margin='normal'
+                        required
+                        fullWidth
+                        id='method'
+                        label="Method"
+                        name='method'
+                        value={expenseData.method}
+                        onChange={(e) => setExpenseData({ ...expenseData, method: e.target.value })}
+                    >
+                        <MenuItem value="Credit Card">Credit Card</MenuItem>
+                        <MenuItem value="Cash">Cash</MenuItem>
+                        <MenuItem value="Debit Card">Debit Card</MenuItem>
+                    </TextField>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="date"
+                        label="Date"
+                        type="date"
+                        id="date"
+                        value={expenseData.dateOfExpense}
+                        onChange={(e) => setExpenseData({ ...expenseData, dateOfExpense: e.target.value })}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                color="primary"
+                                checked={expenseData.isRecurring}
+                                onChange={(e) => setExpenseData({ ...expenseData, isRecurring: e.target.checked })}
+                            />
+                        }
+                        label="Is Recurring"
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        select
+                        label="Category Name"
+                        name="categoryId"
+                        id="categoryId"
+                        value={selectedCategoryId}
+                        onChange={(e) => {
+                            setSelectedCategoryId(e.target.value);
+                            setExpenseData({ ...expenseData, categoryId: e.target.value });
+                        }}
+                    >
+                        <MenuItem value="">Select a category</MenuItem>
+                        {categoriesLoading ? (
+                            <MenuItem>Loading categories...</MenuItem>
+                        ) : categoriesError ? (
+                            <MenuItem>Error loading categories</MenuItem>
+                        ) : (
+                            categories
+                                .filter((category) => category.type === 'expense')
+                                .map((category) => (
+                                    <MenuItem key={category._id} value={category._id}>
+                                        {category.name}
+                                    </MenuItem>
+                                ))
+                        )}
+                    </TextField>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={handleCreateOrUpdateExpense}
+                        disabled={isUpdateMode ? updateLoading : createLoading}
+                    >
+                        {isUpdateMode ? (updateLoading ? 'Updating...' : 'Update Expense') : (createLoading ? 'Creating...' : 'Create Expense')}
+                    </Button>
+                    {isUpdateMode && (
+                        <Box mt={2}>
+                            <Button
+                                fullWidth
+                                variant="outlined"
+                                color="primary"
+                                onClick={handleEditCancel}
+                            >
+                                Cancel
+                            </Button>
+                        </Box>
+                    )}
+                </form>
             </div>
-            <div>
-                <label>Amount:</label>
-                <input
-                    type="number"
-                    value={expenseData.amount}
-                    onChange={(e) => setExpenseData({ ...expenseData, amount: parseFloat(e.target.value) })}
-                />
-            </div>
-            <div>
-                <label>Method:</label>
-                <select
-                    value={expenseData.method}
-                    onChange={(e) => setExpenseData({ ...expenseData, method: e.target.value })}
-                >
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Cash">Cash</option>
-                    <option value="Debit Card">Debit Card</option>
-                </select>
-            </div>
-            <div>
-                <label>Date:</label>
-                <input
-                    type="date"
-                    value={expenseData.dateOfExpense}
-                    onChange={(e) => setExpenseData({ ...expenseData, dateOfExpense: e.target.value })}
-                />
-            </div>
-            <div>
-                <label>isRecurring:</label>
-                <input
-                    type="checkbox"
-                    checked={expenseData.isRecurring}
-                    onChange={(e) => setExpenseData({ ...expenseData, isRecurring: e.target.checked })}
-                />
-            </div>
-            <div>
-                <label>Category Name:</label>
-                <select
-                    value={selectedCategoryId}
-                    onChange={(e) => {
-                        // console.log('Selected Category ID:', e.target.value)
-                        setSelectedCategoryId(e.target.value)
-                            setExpenseData({ ...expenseData, categoryId: e.target.value })
-                    }}
-                >
-                <option value="">Select a category</option>
-                {categoriesLoading ? (
-                    <option>Loading categories...</option>
-                ) : categoriesError ? (
-                    <option>Error loading categories</option>
-                ) : (
-                    categories
-                    .filter((category) => category.type === 'expense')
-                    .map((category) => (
-                        <option key={category._id} value={category._id}>
-                            {category.name}
-                        </option>
-                    ))
-                )}
-                </select>
-            </div>
-            {/* Include other input fields for expense data here */}
-            <button onClick={handleCreateOrUpdateExpense} disabled={isUpdateMode ? updateLoading : createLoading}>
-                {isUpdateMode ? (updateLoading ? 'Updating...' : 'Update Expense') : (createLoading ? 'Creating...' : 'Create Expense')}
-            </button>
-            {isUpdateMode && <button onClick={handleEditCancel}>Cancel</button>}
-        </div>
+        </Container>
     )
 }
 

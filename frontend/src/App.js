@@ -7,7 +7,6 @@ import Register from './pages/Auth/Register'
 import Login from './pages/Auth/Login'
 import Main from './pages/Main/Main'
 import IncExpPage from './pages/Main/IncExpPage'
-import ExpensePage from './pages/Main/ExpensePage';
 
 function App() {
   return (
@@ -18,7 +17,6 @@ function App() {
         <Route path='/register' element={<Register/>}/>
         <Route path='/dashboard' element={<Main/>}/>
         <Route path='/incomeExpense' element={<IncExpPage />} />
-        <Route path='/expense' element={<ExpensePage />} />
       </Routes>
       <Toaster/>
     </div>
