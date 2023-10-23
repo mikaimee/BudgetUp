@@ -24,25 +24,26 @@ const IncomeLine = ({ data }) => {
         // Create object to store data points
         const categoryData = {}
 
-        // Initialize categoryData with all months having zero values
-        months.forEach((monthKey) => {
-            data.forEach((inc) => {
-                const categoryId = inc.categoryId._id
-                const categoryName = inc.categoryId.name
-                if (!categoryData[categoryId]) {
-                    categoryData[categoryId] = { id: categoryName, data: [] }
-                }
-                categoryData[categoryId].data.push({ x: monthKey, y: 0 })
-            })
-        })
-
-        // Populate categoryData with real data
+        // Initialize categoryData with all months having zero values for each category
         data.forEach((inc) => {
             const categoryId = inc.categoryId._id
+            const categoryName  = inc.categoryId.name
+
+            if (!categoryData[categoryId]) {
+                categoryData[categoryId] = { id: categoryName, data: [] };
+            }
+
+            // Create object for each month
+            for (let month = 1; month <= 12; month++) {
+                const monthKey = `${currentYear}-${String(month).padStart(2, '0')}`
+                categoryData[categoryId].data.push({ x: monthKey, y: 0 })
+            }
+
+            // Populate categoryData with real data
             const incomeMonth = new Date(inc.dateReceived).getMonth() + 1
             const monthKey = `${currentYear}-${String(incomeMonth).padStart(2, '0')}`
-        
-            const existingData = categoryData[categoryId].data.find((item) => item.x === monthKey);
+            const existingData = categoryData[categoryId].data.find((item) => item.x === monthKey)
+            
             if (existingData) {
                 existingData.y += inc.amount;
             }
@@ -64,9 +65,9 @@ const IncomeLine = ({ data }) => {
                     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                     xScale={{ type: 'point' }}
                     xFormat={(value) => {
-                        const date = new Date(value);
-                        const options = { year: 'numeric', month: 'short' };
-                        return date.toLocaleDateString('default', options);
+                        const date = new Date(value)
+                        const options = { year: 'numeric', month: 'short' }
+                        return date.toLocaleDateString('default', options)
                     }}
                     yScale={{
                         type: 'linear',

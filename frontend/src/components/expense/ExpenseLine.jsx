@@ -25,26 +25,51 @@ const ExpenseLine = ({ data }) => {
         const categoryData = {}
 
         // Initialize categoryData with all months having zero values
-        months.forEach((monthKey) => {
-            data.forEach((exp) => {
-                const categoryId = exp.categoryId._id
-                const categoryName = exp.categoryId.name
-                if (!categoryData[categoryId]) {
-                    categoryData[categoryId] = { id: categoryName, data: [] }
-                }
-                categoryData[categoryId].data.push({ x: monthKey, y: 0 })
-            })
-        })
+        // months.forEach((monthKey) => {
+        //     data.forEach((exp) => {
+        //         const categoryId = exp.categoryId._id
+        //         const categoryName = exp.categoryId.name
+        //         if (!categoryData[categoryId]) {
+        //             categoryData[categoryId] = { id: categoryName, data: [] }
+        //         }
+        //         categoryData[categoryId].data.push({ x: monthKey, y: 0 })
+        //     })
+        // })
 
         // Populate categoryData with real data
+        // data.forEach((exp) => {
+        //     const categoryId = exp.categoryId._id
+        //     const expenseMonth = new Date(exp.dateOfExpense).getMonth() + 1
+        //     const monthKey = `${currentYear}-${String(expenseMonth).padStart(2, '0')}`
+
+        //     const existingData = categoryData[categoryId].data.find((item) => item.x === monthKey)
+        //     if (existingData) {
+        //         existingData.y += exp.amount
+        //     }
+        // })
+
+        // Initialize categoryData with all months having zero values for each category
         data.forEach((exp) => {
             const categoryId = exp.categoryId._id
+            const categoryName  = exp.categoryId.name
+
+            if (!categoryData[categoryId]) {
+                categoryData[categoryId] = { id: categoryName, data: [] };
+            }
+
+            // Create object for each month
+            for (let month = 1; month <= 12; month++) {
+                const monthKey = `${currentYear}-${String(month).padStart(2, '0')}`
+                categoryData[categoryId].data.push({ x: monthKey, y: 0 })
+            }
+
+            // Populate categoryData with real data
             const expenseMonth = new Date(exp.dateOfExpense).getMonth() + 1
             const monthKey = `${currentYear}-${String(expenseMonth).padStart(2, '0')}`
-
             const existingData = categoryData[categoryId].data.find((item) => item.x === monthKey)
+            
             if (existingData) {
-                existingData.y += exp.amount
+                existingData.y += exp.amount;
             }
         })
 
