@@ -28,7 +28,7 @@ const TableExpense = ({ setSelectedExpense, data, setFilteredExpenses }) => {
 
     const { mutate: deleteMutate, isLoading: deleteExpLoading } = useDeleteExpenseMutation(queryClient)
 
-    // Functionn to filter expenses for selected month and year
+    // Function to filter expenses for selected month and year
     const filterExpenses = (data, year, month) => {
         return data.filter((exp) => {
             const expenseDate = new Date(exp.dateOfExpense)

@@ -47,7 +47,7 @@ const deleteIncome = async (req, res) => {
         if (!result) {
             return res.status(404).json({ message: 'Income not found' })
         }
-        res.status(200).json({ messgae: "Income deleted successfully" })
+        res.status(200).json({ message: "Income deleted successfully" })
     }
     catch (error) {
         console.error(error)
@@ -59,6 +59,8 @@ const getAllIncomeByUser = async (req, res) => {
     try{
         const { _id } = req.user
         const incomeRecords = await Income.find({ userId: _id })
+            .populate('categoryId')
+            .exec()
         return res.status(200).json({ incomeRecords })
     }
     catch (error) {

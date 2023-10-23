@@ -33,11 +33,11 @@ const ExpensePage = () => {
     } = useGetExpensesByUser(userState?.userInfo?.token)
 
     if (expenseLoading) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>
     }
 
     if (isError) {
-        return <div>Error fetching expenses</div>;
+        return <div>Error fetching expenses</div>
     }
 
     const handleEditCancel = () => {

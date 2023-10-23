@@ -25,7 +25,7 @@ const IncomeSchema = new Schema({
     },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'category',
+        ref: 'Category',
         required: true
     },
     isRecurring: {

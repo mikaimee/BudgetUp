@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { Box, CssBaseline, Container, Grid, Typography, Link, Divider, Toolbar } from '@mui/material';
+import { Box, CssBaseline, Container, Grid, Typography, Divider, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MuiDrawer from '@mui/material/Drawer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import List from '@mui/material/List';
-import SavingsIcon from '@mui/icons-material/Savings';
 
 import Nav from '../../components/Nav';
 import ExpensePage from './ExpensePage'

@@ -1,76 +1,45 @@
 import axios from 'axios'
 
-export const createIncome = async ({
-    source,
-    amount,
-    frequency,
-    dateReceived,
-    isRecurring,
-    categoryId,
-    token
+export const createIncome = async({
+    source, amount, frequency, dateReceived, isRecurring, categoryId, token
 }) => {
     try {
-        const headers = {
-            Authorization: `Bearer ${token}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
-        const { data } = await axios.post('http://localhost:8000/incomes', {
-            source,
-            amount,
-            frequency,
-            dateReceived: new Date(dateReceived),
-            isRecurring,
-            categoryId
-        }, { headers }) 
-        return data
+
+        const requestData = { source, amount, frequency, dateReceived, isRecurring, categoryId }
+        const response  = await axios.post('http://localhost:8000/incomes', 
+            requestData,
+            config
+        )
+        if (response.status === 201) {
+            return response.data
+        } 
+        else {
+            throw new Error(`Failed to create an expense. Status: ${response.status}`)
+        }
     }
-    catch (err) {
-        if (err.response && err.response.data.message) {
-            throw new Error(err.response.data.message)
+    catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message)
+        } 
+        else {
+            throw error
         }
-        throw new Error(err.message)
     }
 }
-
-export const updateIncome = async ({ incomeId, updatedIncomeData, token }) => {
-    try {
-        const headers = {
-            Authorization: `Bearer ${token}`
-        }
-        const { data } = await axios.put(`http://localhost:8000/incomes/${incomeId}`, updatedIncomeData, { headers })
-        return data
-    }
-    catch (err) {
-        if (err.response && err.response.data.message) {
-            throw new Error(err.response.data.message)
-        }
-        throw new Error(err.message)
-    }
-}
-
-export const deleteIncome = async({ incomeId, token }) => {
-    try {
-        const headers = {
-            Authorization: `Bearer ${token}`
-        }
-        const { data } = await axios.delete(`http://localhost:8000/incomes/${incomeId}`, { headers })
-        return data
-    }
-    catch (err) {
-        if (err.response && err.response.data.message) {
-            throw new Error(err.response.data.message)
-        }
-        throw new Error(err.message)
-    }
-}
-
 
 export const getAllIncomeByUser = async (token) => {
     try {
-        const headers = {
-            Authorization: `Bearer ${token}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
-
-        const response = await axios.get('http://localhost:8000/incomes/byUser', { headers })
+        const response = await axios.get('http://localhost:8000/incomes/byUser', config)
         if (response.status === 200) {
             return response.data.incomeRecords
         }
@@ -83,23 +52,48 @@ export const getAllIncomeByUser = async (token) => {
     }
 }
 
-// WIP
-export const calculateTotalIncomeByDateRange = async( token, startDate, endDate ) => {
+export const updateIncome = async ({ incomeId, updatedIncomeData, token }) => {
     try {
-        const headers = {
-        Authorization: `Bearer ${token}`
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
-
-        const params = { startDate, endDate }
-
-        const { data } = await axios.get('http://localhost:8000/incomes/calculate', { headers, params })
-        return data.totalIncome
+        const response = await axios.put(`http://localhost:8000/incomes/${incomeId}`, updatedIncomeData, config)
+        if (response.status === 200) {
+            return response.data.income
+        }
+        else {
+            throw new Error(`Update failed with status code: ${response.status}`)
+        }
     }
     catch (err) {
         if (err.response && err.response.data.message) {
-            throw new Error(err.response.data.message)
+            throw new Error(`Update failed: ${err.response.data.message}`);
+        } 
+        else {
+            throw new Error(`Update request failed: ${err.message}`);
         }
-        throw new Error(err.message)
+    }
+}
+
+export const deleteIncome = async ({ incomeId, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.delete(`http://localhost:8000/incomes/${incomeId}`, config)
+        return response.data
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Delete failed: ${err.response.data.message}`);
+        } 
+        else {
+            throw new Error(`Delete request failed: ${err.message}`);
+        }
     }
 }
 
@@ -129,37 +123,5 @@ export const searchIncome = async (keyword, token) => {
             // Something else went wrong
             throw new Error('An error occurred while making the request.');
         }
-    }
-}
-
-export const groupIncomeCategories = async ({token}) => {
-    try {
-        const headers = {
-            Authorization: `Bearer ${token}`
-        }
-        const response = await axios.get('http://localhost:8000/incomes/groupByCategory', headers)
-        return response.data.incomeCategories
-    }
-    catch (err) {
-        if (err.response && err.response.data.message) {
-            throw new Error(err.response.data.message)
-        }
-        throw new Error(err.message)
-    }
-}
-
-export const filterIncomeByCategory = async (categoryId, token) => {
-    try {
-        const headers = {
-            Authorization: `Bearer ${token}`
-        }
-        const response = await axios.get(`http://localhost:8000/incomes/byCategory?categoryId=${categoryId}`, headers)
-        return response.data
-    }
-    catch (err) {
-        if (err.response && err.response.data.message) {
-            throw new Error(err.response.data.message)
-        }
-        throw new Error(err.message)
     }
 }
