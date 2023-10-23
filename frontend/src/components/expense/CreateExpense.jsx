@@ -107,7 +107,7 @@ const CreateExpense = ({ selectedExpense, onEditCancel }) => {
                 }
                 const createdExpenseData = {
                     ...expenseData,
-                    categoryId: selectedCategoryId,
+                    categoryId: selectedCategoryId
                 }
                 
                 const result = await createMutate(createdExpenseData)

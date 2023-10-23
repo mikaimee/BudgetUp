@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import toast from 'react-hot-toast'
-import { useGetExpensesByUser, useDeleteExpenseMutation } from '../../hooks/expenseHook'
+import { useDeleteExpenseMutation } from '../../hooks/expenseHook'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { TextField, Paper, Button, Grid, Checkbox, Typography, Avatar, Link, Container, createTheme, ThemeProvider, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';

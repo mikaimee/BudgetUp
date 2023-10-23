@@ -99,7 +99,7 @@ export function useSearch() {
             if (error.message === 'Token is missing') {
                 console.error('Token is missing. Make sure the token is provided.');
             } else {
-                console.error('Error from searchExpenseRecords:', error);
+                console.error('Error from searchIncomeRecords:', error);
             }
 
             throw error

@@ -20,11 +20,12 @@ const SearchExpense = () => {
     const handleSearch = () => {
         try {
             if (!userState?.userInfo?.token) {
-                throw new Error('Token is missing or invalid.');
+                throw new Error('Token is missing or invalid.')
             }
 
-            searchExpenseRecords({ keyword: searchTerm, token: userState?.userInfo?.token });
-        } catch (error) {
+            searchExpenseRecords({ keyword: searchTerm, token: userState?.userInfo?.token })
+        } 
+        catch (error) {
             // Handle the token-related error
             console.error('Token Error:', error.message);
         }

@@ -19,7 +19,7 @@ export const createIncome = async({
             return response.data
         } 
         else {
-            throw new Error(`Failed to create an expense. Status: ${response.status}`)
+            throw new Error(`Failed to create an income. Status: ${response.status}`)
         }
     }
     catch (error) {

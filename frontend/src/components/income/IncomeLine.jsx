@@ -1,34 +1,34 @@
 import React from 'react'
 import { ResponsiveLine  } from '@nivo/line'
 
-const ExpenseLine = ({ data }) => {
+const IncomeLine = ({ data }) => {
 
     if (!data || data.length === 0) {
         return (
             <div>
-                <h2>No expense data available for the current year.</h2>
+                <h2>No income data avalible for for the current year.</h2>
             </div>
-        );
+        )
     }
 
-    // Get current year and month
+    // Get current year
     const currentYear = new Date().getFullYear()
 
     // Data transformation for line chart
     const transformData = () => {
-        // Create an array of month keys from January to December
+        // Craete array of month keys
         const months = Array.from({ length: 12 }, (_, i) => {
             return `${currentYear}-${String(i + 1).padStart(2, '0')}`
         })
 
-        // Create object to store data points for each category
+        // Create object to store data points
         const categoryData = {}
 
         // Initialize categoryData with all months having zero values
         months.forEach((monthKey) => {
-            data.forEach((exp) => {
-                const categoryId = exp.categoryId._id
-                const categoryName = exp.categoryId.name
+            data.forEach((inc) => {
+                const categoryId = inc.categoryId._id
+                const categoryName = inc.categoryId.name
                 if (!categoryData[categoryId]) {
                     categoryData[categoryId] = { id: categoryName, data: [] }
                 }
@@ -37,14 +37,14 @@ const ExpenseLine = ({ data }) => {
         })
 
         // Populate categoryData with real data
-        data.forEach((exp) => {
-            const categoryId = exp.categoryId._id
-            const expenseMonth = new Date(exp.dateOfExpense).getMonth() + 1
-            const monthKey = `${currentYear}-${String(expenseMonth).padStart(2, '0')}`
-
-            const existingData = categoryData[categoryId].data.find((item) => item.x === monthKey)
+        data.forEach((inc) => {
+            const categoryId = inc.categoryId._id
+            const incomeMonth = new Date(inc.dateReceived).getMonth() + 1
+            const monthKey = `${currentYear}-${String(incomeMonth).padStart(2, '0')}`
+        
+            const existingData = categoryData[categoryId].data.find((item) => item.x === monthKey);
             if (existingData) {
-                existingData.y += exp.amount
+                existingData.y += inc.amount;
             }
         })
 
@@ -57,7 +57,7 @@ const ExpenseLine = ({ data }) => {
 
     return (
         <div>
-            <h2>Expense Trend Line Chart</h2>
+            <h2>Income Trend Line Chart</h2>
             <div style={{ height: 400 }}>
                 <ResponsiveLine
                     data={chartData}
@@ -124,4 +124,4 @@ const ExpenseLine = ({ data }) => {
     )
 }
 
-export default ExpenseLine
+export default IncomeLine

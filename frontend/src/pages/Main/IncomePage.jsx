@@ -6,6 +6,9 @@ import { useGetIncomesByUser } from '../../hooks/incomeHook'
 import CreateIncome from '../../components/income/CreateIncome'
 import IncomeTable from '../../components/income/IncomeTable'
 import SearchIncome from '../../components/income/SearchIncome'
+import IncomePie from '../../components/income/IncomePie'
+import YearlyIncomePie from '../../components/income/YearlyIncomePie'
+import IncomeLine from '../../components/income/IncomeLine'
 
 import { Box, CssBaseline, Container, Paper, Grid, Typography, Link, Divider, Toolbar } from '@mui/material'
 
@@ -62,6 +65,21 @@ const IncomePage = () => {
                 <Grid item xs={12} md={6}>
                     <Paper sx={paperStyle}>
                         <SearchIncome />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Paper sx={paperStyle}>
+                        <IncomePie data={filteredIncomes} />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={5}>
+                    <Paper sx={paperStyle}>
+                        <YearlyIncomePie data={incomeData} />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={7}>
+                    <Paper sx={paperStyle}>
+                        <IncomeLine data={incomeData} />
                     </Paper>
                 </Grid>
             </Grid>
