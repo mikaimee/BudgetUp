@@ -8,6 +8,7 @@ import TableExpense from '../../components/expense/TableExpense'
 import SearchExpense from '../../components/expense/SearchExpense'
 import ExpensePie from '../../components/expense/ExpensePie'
 import YearlyExpensePie from '../../components/expense/YearlyExpensePie'
+import ExpenseLine from '../../components/expense/ExpenseLine'
 
 const ExpensePage = () => {
 
@@ -46,6 +47,7 @@ const ExpensePage = () => {
             <SearchExpense />
             <ExpensePie data={filteredExpenses} />
             <YearlyExpensePie data={expenseData} />
+            <ExpenseLine data={expenseData} />
         </div>
     )
 }
