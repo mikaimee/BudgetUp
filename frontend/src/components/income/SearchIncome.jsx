@@ -15,6 +15,7 @@ const SearchIncome = () => {
 
     const [searchTerm, setSearchTerm] = useState('')
     const userState = useSelector((state) => state.user)
+    const [hasSearched, setHasSearched] = useState(false)
 
     const { searchIncomeRecords, isLoading, error, searchResults } = useSearch()
 
@@ -25,10 +26,18 @@ const SearchIncome = () => {
             }
 
             searchIncomeRecords({ keyword: searchTerm, token: userState?.userInfo?.token })
+            setHasSearched(true)
         }
         catch (error) {
             // Handle the token-related error
             console.error('Token Error:', error.message);
+        }
+    }
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            // Call handleSearch when the Enter key is pressed
+            handleSearch();
         }
     }
 
@@ -47,6 +56,7 @@ const SearchIncome = () => {
                     name="searchTerm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     InputProps={{
                         endAdornment: (
                         <InputAdornment position="end">
@@ -54,6 +64,7 @@ const SearchIncome = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleSearch}
+                                disabled={!searchTerm}
                             >
                                 Search
                             </Button>
@@ -66,7 +77,7 @@ const SearchIncome = () => {
                     {error && <Typography>Error: {error.message}</Typography>}
                 </div>
                 <div style={{ marginTop: '20px' }}>
-                    {searchResults.length > 0 && (
+                    {hasSearched && searchResults.length > 0 ? (
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -78,15 +89,17 @@ const SearchIncome = () => {
                                 </TableHead>
                                 <TableBody>
                                     {searchResults.map((result) => (
-                                    <TableRow key={result._id}>
-                                        <TableCell>{result.source}</TableCell>
-                                        <TableCell>{new Date(result.dateReceived).toLocaleDateString()}</TableCell>
-                                        <TableCell>${result.amount.toFixed(2)}</TableCell>
-                                    </TableRow>
+                                        <TableRow key={result._id}>
+                                            <TableCell>{result.source}</TableCell>
+                                            <TableCell>{new Date(result.dateReceived).toLocaleDateString()}</TableCell>
+                                            <TableCell>${result.amount.toFixed(2)}</TableCell>
+                                        </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                    ) : (
+                        hasSearched && <Typography>No income records found for the given search term.</Typography>
                     )}
                 </div>
             </div>
