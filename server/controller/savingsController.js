@@ -3,24 +3,12 @@ const Savings = require('../model/Savings')
 const createSavings = async (req, res) => {
     try {
         const { goalAmount, targetDate, currentAmount, status, contributions, categoryId, notes } = req.body
-        
-        const dobParts = targetDate.split('/')
-            if (dobParts.length !== 3) {
-                return res.status(400).json({ message: "Invalid date format" })
-            }
-            const month = parseInt(dobParts[0], 10)
-            const day = parseInt(dobParts[1], 10)
-            const year = parseInt(dobParts[2], 10)
-            if (isNaN(month) || isNaN(day) || isNaN(year)) {
-                return res.status(400).json({ message: "Invalid date format" })
-            }
-            const parsedTargetDate  = new Date(year, month - 1, day)
 
         const savings = new Savings({
             userId: req.user._id,
             goalAmount,
             currentAmount,
-            targetDate: parsedTargetDate ,
+            targetDate,
             status,
             contributions,
             categoryId,
@@ -70,8 +58,8 @@ const deleteSavings = async (req, res) => {
 
 const listSavingGoalByUser = async (req, res) => {
     try{
-        const userId = req.user._id
-        const savingGoals = await Savings.find({ userId })
+        const { _id } = req.user
+        const savingGoals = await Savings.find({ userId: _id }).populate('categoryId').exec()
         return res.status(200).json({ savingGoals })
     }
     catch (error) {

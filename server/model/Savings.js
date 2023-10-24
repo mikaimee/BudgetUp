@@ -22,7 +22,9 @@ const SavingsSchema = new Schema({
         amount: Number
     }],
     categoryId: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
     },
     notes: String,
 }, {timestamps: true})

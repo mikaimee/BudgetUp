@@ -23,7 +23,7 @@ const IncomePage = () => {
 
     const [selectedIncome, setSelectedIncome] = useState(null)
     const [filteredIncomes, setFilteredIncomes] = useState([])
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
     const userState = useSelector((state) => state.user)
 
     const {
