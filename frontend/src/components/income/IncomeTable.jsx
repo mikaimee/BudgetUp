@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { TextField, Paper, Button, Grid, Checkbox, Typography, Avatar, Link, Container, createTheme, ThemeProvider, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline'
 
-const ITEMS_PER_PAGE = 5
 
 const IncomeTable = ({ setSelectedIncome, data, setFilteredIncomes}) => {
 
@@ -17,9 +16,6 @@ const IncomeTable = ({ setSelectedIncome, data, setFilteredIncomes}) => {
     const currentDate = new Date()
     const currentMonth = currentDate.getMonth() + 1 // Months are 0-indexed
     const currentYear = currentDate.getFullYear()
-
-    // Variable for pagination
-    const [currentPage, setCurrentPage] = useState(1)
 
     // State to track displayed month
     const [displayedMonth, setDisplayedMonth] = useState(currentMonth)
@@ -89,6 +85,24 @@ const IncomeTable = ({ setSelectedIncome, data, setFilteredIncomes}) => {
         }
     }
 
+    // State to track number if items to display and total number of items
+    const [displayedItems, setDisplayedItems] = useState(5)
+    const totalItems = sortedIncomes.length
+
+    // Slice sortedIncomes array to display only desired # of items
+    const displayedIncomes = sortedIncomes.slice(0, displayedItems)
+
+    // Load more and Show less buttons
+    const handleLoadMore = () => {
+        // Increase number of displayed items
+        setDisplayedItems(displayedItems + 5)
+    }
+
+    const handleShowLess = () => {
+        // Decrease the number of displayed items to the initial value (5)
+        setDisplayedItems(5)
+    }
+
     return (
         <Container component='main' maxWidth='lg'>
             <CssBaseline />
@@ -114,7 +128,7 @@ const IncomeTable = ({ setSelectedIncome, data, setFilteredIncomes}) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sortedIncomes.map((inc) => (
+                            {displayedIncomes.map((inc) => (
                                 <TableRow key={inc._id}>
                                     <TableCell>{new Date(inc.dateReceived).toLocaleDateString()}</TableCell>
                                     <TableCell>{inc.source}</TableCell>
@@ -128,6 +142,14 @@ const IncomeTable = ({ setSelectedIncome, data, setFilteredIncomes}) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+            </div>
+            <div>
+                {displayedItems < totalItems && (
+                    <Button onClick={handleLoadMore}>Load More</Button>
+                )}
+                {displayedItems > 5 && (
+                    <Button onClick={handleShowLess}>Show Less</Button>
+                )}
             </div>
         </Container>
     )

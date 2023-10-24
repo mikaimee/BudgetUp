@@ -41,6 +41,22 @@ const SearchIncome = () => {
         }
     }
 
+    const [displayedItems, setDisplayedItems] = useState(5)
+    const totalItems = searchResults.length
+
+    const displayedSearches = searchResults.slice(0, displayedItems)
+
+    // Load more and Show less buttons
+    const handleLoadMore = () => {
+        // Increase number of displayed items
+        setDisplayedItems(displayedItems + 5)
+    }
+
+    const handleShowLess = () => {
+        // Decrease the number of displayed items to the initial value (5)
+        setDisplayedItems(5)
+    }
+
     return (
         <Container component="main" maxWidth="lg">
             <CssBaseline />
@@ -88,7 +104,7 @@ const SearchIncome = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {searchResults.map((result) => (
+                                    {displayedSearches.map((result) => (
                                         <TableRow key={result._id}>
                                             <TableCell>{result.source}</TableCell>
                                             <TableCell>{new Date(result.dateReceived).toLocaleDateString()}</TableCell>
@@ -102,6 +118,14 @@ const SearchIncome = () => {
                         hasSearched && <Typography>No income records found for the given search term.</Typography>
                     )}
                 </div>
+            </div>
+            <div>
+                {displayedItems < totalItems && (
+                    <Button onClick={handleLoadMore}>Load More</Button>
+                )}
+                {displayedItems > 5 && (
+                    <Button onClick={handleShowLess}>Show Less</Button>
+                )}
             </div>
         </Container>
     )

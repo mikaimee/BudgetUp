@@ -6,8 +6,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { TextField, Paper, Button, Grid, Checkbox, Typography, Avatar, Link, Container, createTheme, ThemeProvider, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline'
 
-const ITEMS_PER_PAGE = 5
-
 const TableExpense = ({ setSelectedExpense, data, setFilteredExpenses }) => {
 
     const queryClient = useQueryClient()
@@ -17,9 +15,6 @@ const TableExpense = ({ setSelectedExpense, data, setFilteredExpenses }) => {
     const currentDate = new Date()
     const currentMonth = currentDate.getMonth() + 1 // Months are 0-indexed
     const currentYear = currentDate.getFullYear()
-
-    // Variable for pagination
-    const [currentPage, setCurrentPage] = useState(1)
 
     // State to track displayed month
     const [displayedMonth, setDisplayedMonth] = useState(currentMonth)
@@ -87,31 +82,22 @@ const TableExpense = ({ setSelectedExpense, data, setFilteredExpenses }) => {
         }
     }
 
-    // Calculate range of items to diaplay based on current
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const endIndex = startIndex + ITEMS_PER_PAGE
+    // State to track number if items to display and total number of items
+    const [displayedItems, setDisplayedItems] = useState(5)
+    const totalItems = sortedExpenses.length
 
-    // Function to get items to display based on current page
-    const getItemsToDisplay = () => sortedExpenses.slice(startIndex, endIndex)
+    // Slice sortedExpenses array to display only desired # of items
+    const displayedExpenses = sortedExpenses.slice(0, displayedItems)
 
-    // Update filtered expenses when crrent page change
-    useEffect(() => {
-        const itemsToDisplay = getItemsToDisplay()
-        setFilteredExpenses(itemsToDisplay)
-    }, [currentPage, sortedExpenses, setFilteredExpenses])
-
-    // Function to handle load more
+    // Load more and Show less buttons
     const handleLoadMore = () => {
-        if (endIndex < sortedExpenses.length) {
-            setCurrentPage((prevPage) => prevPage + 1)
-        }
+        // Increase number of displayed items
+        setDisplayedItems(displayedItems + 5)
     }
 
-    // Function to handle show less
-    const handleShowLess  = () => {
-        if (currentPage > 1) {
-            setCurrentPage((prevPage) => prevPage - 1)
-        }
+    const handleShowLess = () => {
+        // Decrease the number of displayed items to the initial value (5)
+        setDisplayedItems(5)
     }
 
     return (
@@ -139,28 +125,28 @@ const TableExpense = ({ setSelectedExpense, data, setFilteredExpenses }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                        {sortedExpenses.map((exp) => (
-                            <TableRow key={exp._id}>
-                                <TableCell>{new Date(exp.dateOfExpense).toLocaleDateString()}</TableCell>
-                                <TableCell>{exp.vendor}</TableCell>
-                                <TableCell>${exp.amount.toFixed(2)}</TableCell>
-                                <TableCell>
-                                    <Button onClick={() => setSelectedExpense(exp)}>Edit</Button>
-                                    <Button onClick={() => handleDelete(exp._id)}>Delete</Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                            {displayedExpenses.map((exp) => (
+                                <TableRow key={exp._id}>
+                                    <TableCell>{new Date(exp.dateOfExpense).toLocaleDateString()}</TableCell>
+                                    <TableCell>{exp.vendor}</TableCell>
+                                    <TableCell>${exp.amount.toFixed(2)}</TableCell>
+                                    <TableCell>
+                                        <Button onClick={() => setSelectedExpense(exp)}>Edit</Button>
+                                        <Button onClick={() => handleDelete(exp._id)}>Delete</Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <div>
-                    {sortedExpenses.length > ITEMS_PER_PAGE && (
-                        <div>
-                            {currentPage > 1 && <Button onClick={handleShowLess}>Show Less</Button>}
-                            {endIndex < sortedExpenses.length && <Button onClick={handleLoadMore}>Load More</Button>}
-                        </div>
-                    )}
-                </div>
+            </div>
+            <div>
+                {displayedItems < totalItems && (
+                    <Button onClick={handleLoadMore}>Load More</Button>
+                )}
+                {displayedItems > 5 && (
+                    <Button onClick={handleShowLess}>Show Less</Button>
+                )}
             </div>
         </Container>
     )
