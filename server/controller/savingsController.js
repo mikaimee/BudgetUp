@@ -125,11 +125,69 @@ const groupSavingsByCategory = async (req, res) => {
     }
 }
 
+const addContributions = async (req, res) => {
+    try {
+        const { savingsId } = req.params
+        const { amount, date } = req.body
+
+        const savings = await Savings.findById(savingsId)
+        if (!savings) {
+            return res.status(404).json({ error: 'Savings not found' })
+        }
+
+        const newContribution = {
+            amount,
+            date
+        }
+
+        savings.contributions.push(newContribution)
+        savings.currentAmount += amount
+
+        await savings.save()
+        return res.status(200).json({ message: 'Contribution added successfully', updatedSavings: savings })
+    }
+    catch (error) {
+        return res.status(500).json({ error: 'Internal server error' })
+    }
+}
+
+const deleteContribution = async (req, res) => {
+    try {
+        const { savingsId, contributionId } = req.params
+
+        const savings = await Savings.findById(savingsId)
+        if (!savings) {
+            return res.status(404).json({ error: 'Savings not found' })
+        }
+
+        const contributionIndex = savings.contributions.findIndex(
+            (contribution) => contribution._id.toString() === contributionId
+        )
+        if (contributionIndex === -1) {
+            return res.status(404).json({ error: 'Contribution not found' })
+        }
+
+        const deletedContribution = savings.contributions[contributionIndex]
+        const deletedAmount = deletedContribution.amount
+
+        savings.contributions.splice(contributionIndex, 1)
+        savings.currentAmount -= deletedAmount
+        
+        await savings.save()
+        res.status(200).json({ message: "Contribution deleted successfully" })
+    }
+    catch (error) {
+        return res.status(500).json({ error: 'Internal server error' })
+    }
+}
+
 module.exports = {
     createSavings,
     updateSavings,
     deleteSavings,
     groupSavingsByCategory,
     filterSavings,
-    listSavingGoalByUser
+    listSavingGoalByUser,
+    addContributions,
+    deleteContribution
 }

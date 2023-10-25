@@ -16,5 +16,10 @@ router.route('/byUser')
 router.route('/groupByCategory')
     .get(protection.authProtect, sController.groupSavingsByCategory)
 
+router.route('/:savingsId/contribution')
+    .put(protection.authProtect, sController.addContributions)
+
+router.route('/:savingsId/:contributionId')
+    .delete(protection.authProtect, sController.deleteContribution)
 
 module.exports = router
