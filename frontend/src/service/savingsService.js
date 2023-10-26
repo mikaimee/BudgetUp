@@ -97,3 +97,53 @@ export const deleteSavings = async ({ savingsId, token }) => {
         }
     }
 }
+
+export const addContributions = async ({ savingsId, contributionData, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.put(`http://localhost:8000/savings/${savingsId}/contribution`, contributionData, config)
+        if (response.status === 200) {
+            return response.data.updatedSavings
+        }
+        else {
+            throw new Error(`Update failed: ${response.data.error}`)
+        }
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Update failed: ${err.response.data.message}`)
+        } 
+        else {
+            throw new Error(`Update request failed: ${err.message}`)
+        }
+    }
+}
+
+export const deleteContribution = async ({ savingsId, contributionId, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.delete(`http://localhost:8000/savings/${savingsId}/${contributionId}`, config)
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            throw new Error(`Deletion failed: ${response.data.error}`)
+        }
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Update failed: ${err.response.data.message}`)
+        } 
+        else {
+            throw new Error(`Update request failed: ${err.message}`)
+        }
+    }
+}

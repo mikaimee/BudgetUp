@@ -2,7 +2,9 @@ import {
     createSavings,
     savingsByUser,
     updateSavings,
-    deleteSavings
+    deleteSavings,
+    addContributions,
+    deleteContribution
 } from '../service/savingsService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
@@ -71,6 +73,51 @@ export const useDeleteSavingsMutation = (queryClient) => {
             onSuccess: () => {
                 queryClient.invalidateQueries('savingsByUser')
                 toast.success("Successfully deleted")
+            },
+            onError: (error) => {
+                toast.error('Error deleting savings', error.message)
+                console.error(error)
+            }
+        }
+    )
+}
+
+export const useAddContributionMutation = (queryClient) => {
+    return useMutation(
+        ({ savingsId, contributionData, token }) => {
+            const parsedAmount = parseFloat(contributionData.amount)
+            if (isNaN(parsedAmount)) {
+                throw new Error('Invalid amount');
+            }
+            contributionData.amount = parsedAmount
+            return addContributions({ savingsId, contributionData, token })
+        },
+        {
+            onSuccess: (data) => {
+                if (data) {
+                    queryClient.invalidateQueries('savingsByUser')
+                    console.log('Updated Savings: ', data)
+                    toast.success('Added Contribution successfully')
+                }
+                else {
+                    toast.error('Failed to add contribution')
+                }
+            },
+            onError: (error) => {
+                toast.error('Error adding contribution', error.message)
+                console.error(error)
+            }
+        }
+    )
+}
+
+export const useDeleteContributionsMutation = (queryClient) => {
+    return useMutation(
+        ({ savingsId, contributionId, token }) => deleteContribution({ savingsId, contributionId, token }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('savingsByUser')
+                toast.success("Successfully deleted contribution")
             },
             onError: (error) => {
                 toast.error('Error deleting savings', error.message)

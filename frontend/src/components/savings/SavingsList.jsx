@@ -21,6 +21,8 @@ const SavingsList = ({ setSelectedSavings, data}) => {
     // State to track displayed year
     const [displayedYear, setDisplayedYear] = useState(currentYear)
 
+    const [currentAmount, setCurrentAmount] = useState(0)
+    
     // Delete and Update function
     const { mutate: deleteMutate, isLoading: deleteIncLoading } = useDeleteSavingsMutation(queryClient)
     
@@ -141,6 +143,9 @@ const SavingsList = ({ setSelectedSavings, data}) => {
                                 goalAmount={savItem.goalAmount}
                             />
                             <AddContribution 
+                                savingsId={savItem._id}
+                                currentAmount={savItem.currentAmount}
+                                setCurrentAmount={setCurrentAmount}
                             />
                             <div>
                             <Button onClick={() => setSelectedSavings(savItem)}>Edit</Button>

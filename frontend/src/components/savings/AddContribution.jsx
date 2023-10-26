@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
-import { useUpdateSavingsMutation } from '../../hooks/savingsHook'
+import { useAddContributionMutation } from '../../hooks/savingsHook'
 
 import {
     Container,
@@ -17,62 +17,45 @@ import {
     Box,
 } from '@mui/material'
 
-const AddContribution = () => {
+const AddContribution = ({ savingsId, currentAmount, setCurrentAmount }) => {
 
-    // const queryClient = useQueryClient()
-    // const userState = useSelector((state) => state.user)
+    const queryClient = useQueryClient()
+    const userState = useSelector((state) => state.user)
 
-    // const initialContributionsData = {
-    //     amount: 0,
-    //     date: ''
-    // }
+    const initialContributionData = {
+        amount: 0,
+        date: ''
+    }
 
-    // const [contributionAmount, setContributionAmount] = useState(0)
-    // const [contributionDate, setContributionDate] = useState('')
-    // const [contributionData, setContributionData] = useState(initialContributionsData)
-    // const [savingsData, setSavingsData] = useState(savingItem)
+    const [contributionData, setContributionData] = useState(initialContributionData)
 
-    // console.log("ADDCONTRI: ", savingsData)
+    const { mutate: addContribution } = useAddContributionMutation(queryClient)
 
-    // // Call hooks
-    // const { isLoading: updateLoading, mutate: updateMutate } = useUpdateSavingsMutation(queryClient, onEditCancel)
+    const handleAddContribution = async (e) => {
+        e.preventDefault()
+        try {
+            // call mutation
+            const response = addContribution({
+                savingsId,
+                contributionData,
+                token: userState?.userInfo?.token
+            })
+            
+            if(response) {
+                // Update currentAmount by adding new contribution
+                const contributionAmount = parseFloat(contributionData.amount)
+                const newCurrentAmount = currentAmount + contributionAmount
+                setCurrentAmount(newCurrentAmount)
 
-    // const updateContributions = async (e) => {
-    //     e.preventDefault()
-    //     try {
-    //         const newContribution = {
-    //             amount: contributionAmount,
-    //             date: contributionDate
-    //         }
-
-    //         const updatedContributions = [...savingsData.contributions, newContribution]
-
-    //         const updatedSavingsData = {
-    //             ...savingsData,
-    //             currentAmount: savingsData.currentAmount + contributionAmount,
-    //             token: userState?.userInfo?.token,
-    //             contributions: updatedContributions
-    //         }
-
-    //         updateMutate({
-    //             savingsId: savingsData._id,
-    //             updatedSavingsData,
-    //             token: userState?.userInfo?.token
-    //         })
-
-    //         // Reset contributionsData state to initial value
-    //         setContributionData(initialContributionsData)
-    //     }
-    //     catch (error) {
-    //         toast.error(error.message)
-    //         console.error(error)
-    //     }
-    // }
-
-    // const handleCancelContribution = () => {
-    //     setContributionAmount(initialContributionsData.amount)
-    //     setContributionDate(initialContributionsData.date)
-    // }
+                // Reset contribution form field
+                setContributionData(initialContributionData)
+            }
+        }
+        catch (error) {
+            toast.error('Failed to add contribution', error.message)
+            console.error(error)
+        }
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -80,50 +63,37 @@ const AddContribution = () => {
                 <Typography component="h5" variant="h5">
                     Add Contribution
                 </Typography>
-                {/* <form onSubmit={updateContributions}>
+                <form onSubmit={handleAddContribution}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                variant="outlined"
+                                variant='outlined'
                                 required
                                 fullWidth
-                                type="number"
-                                label="Contribution Amount"
-                                name="contributionAmount"
-                                value={contributionAmount}
-                                onChange={(e) => setContributionAmount(e.target.value)}
+                                type='number'
+                                label='Contribution Amount'
+                                name='amount'
+                                value={contributionData.amount}
+                                onChange={(e) => setContributionData({...contributionData, amount: e.target.value})}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                variant="outlined"
+                                variant='outlined'
                                 required
                                 fullWidth
-                                type="date"
-                                label="Contribution Date"
-                                name="contributionDate"
-                                value={contributionDate}
-                                onChange={(e) => setContributionDate(e.target.value)}
+                                type='date'
+                                label='Contribution Date'
+                                name='date'
+                                value={contributionData.date}
+                                onChange={(e) => setContributionData({...contributionData, date: e.target.value})}
                             />
                         </Grid>
                     </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                    >
+                    <Button type='submit' variant='container' color='primary'>
                         Add Contribution
                     </Button>
-                    <Button
-                        fullWidth
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleCancelContribution}
-                    >
-                        Cancel
-                    </Button>
-                </form> */}
+                </form>
             </div>
         </Container>
     )
