@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const BudgetSchema = new Schema({
+const BudgetingSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -15,18 +15,14 @@ const BudgetSchema = new Schema({
     endDate: Date,
     totalAmount: Number,
     categories: [{
-        category: {
+        categoryId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Category'
+            ref: 'Category',
         },
         allocatedAmount: Number
     }],
     currency: String,
     remainingAmount: Number,
-    transactions: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Transaction'
-    }],
     status: String,
     goals: [{
         description: String,
@@ -36,4 +32,4 @@ const BudgetSchema = new Schema({
     budgetType: String
 }, {timestamps: true})
 
-module.exports = mongoose.model('Budget', BudgetSchema)
+module.exports = mongoose.model('Budgeting', BudgetingSchema)

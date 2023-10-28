@@ -39,7 +39,7 @@ app.use('/categories', require('./routes/categoryRoutes'))
 app.use('/expenses', require('./routes/expenseRoutes'))
 app.use('/savings', require('./routes/savingsRoutes'))
 app.use('/transactions', require('./routes/transactionRoutes'))
-app.use('/budgets', require('./routes/budgetRoutes'))
+app.use('/budgeting', require('./routes/budgetingRoutes'))
 
 // Custom 404 Error Page 
 app.all('*', (req, res) => {
