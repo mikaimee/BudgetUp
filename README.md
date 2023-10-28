@@ -16,3 +16,4 @@ Welcome to My Budget Application! Manage your finances like a pro with this user
 - Database: MongoDB
 - Authentication: JWT
 - Data Visualization: Nivo
+
