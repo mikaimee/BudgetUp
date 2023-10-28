@@ -6,6 +6,7 @@ import { useGetSavingsByUser } from '../../hooks/savingsHook'
 import AddSavings from '../../components/savings/AddSavings'
 import SavingsList from '../../components/savings/SavingsList'
 import SavingsHistory from '../../components/savings/SavingsHistory'
+import SavingsAnalytics from '../../components/savings/SavingsAnalytics'
 
 import { Box, CssBaseline, Container, Paper, Grid, Typography, Link, Divider, Toolbar } from '@mui/material'
 
@@ -55,6 +56,11 @@ const SavingsPage = () => {
             <Grid item xs={12} md={12}>
                 <Paper sx={paperStyle}>
                     <SavingsHistory data={savingsData} />
+                </Paper>
+            </Grid>
+            <Grid item xs={12} md={12}>
+                <Paper sx={paperStyle}>
+                    <SavingsAnalytics data={savingsData} />
                 </Paper>
             </Grid>
         </Grid>

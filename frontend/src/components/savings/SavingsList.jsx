@@ -30,9 +30,13 @@ const SavingsList = ({ setSelectedSavings, data}) => {
     const filterSavings = (data, year) => {
         return data.filter((sav) => {
             const savingsDate = new Date(sav.createdAt)
-            return (
-                savingsDate.getFullYear() === year 
-            )
+            const targetDate = new Date(sav.targetDate)
+            if (targetDate > currentDate) {
+                return (
+                    savingsDate.getFullYear() === year 
+                )
+            }
+            return false
         })
     }
 
