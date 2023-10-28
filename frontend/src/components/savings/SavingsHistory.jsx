@@ -14,12 +14,32 @@ import SavingsFilter from './SavingsFilter';
 // Monthly / Yearly summary: summary to show monthly or yearly totals of contributions + progress
 const SavingsHistory = ({ data }) => {
 
+    // Define filter riteria state
+    const [filterCriteria, setFilterCriteria] = useState({
+        dateFrom: '',
+        dateTo: '',
+        status: ''
+    })
+
     // Function to format date 
     const formatDate = (dateString) => {
         const date = new Date(dateString)
         const options = { year: "numeric", month: "2-digit", day: "2-digit" }
         return date.toLocaleDateString(undefined, options)
     }
+
+    // Filter savings based on criteria
+    const filteredSavings = data.filter((savingsItem) =>{
+        const { dateFrom, dateTo, status } = filterCriteria
+        const savingsDate = new Date(savingsItem.createdAt)
+
+        // Apply filtering based on date and status
+        const dateFromValid = !dateFrom || savingsDate >= new Date(dateFrom)
+        const dateToValid = !dateTo || savingsDate <= new Date(dateTo)
+        const statusValid = !status || savingsItem.status === status
+    
+        return dateFromValid && dateToValid && statusValid
+    })
 
     return (
         <Container component='main' maxWidth='lg'>
@@ -28,7 +48,8 @@ const SavingsHistory = ({ data }) => {
             <Typography component='h2' variant='h5'>
                 Savings History
             </Typography>
-            {data.map((savingsItem, index) => (
+            <SavingsFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+            {filteredSavings.map((savingsItem, index) => (
                 <div key={index} style={{ display: "flex", alignItems: "center" }}>
                     <Typography variant='h6'>Date: {formatDate(savingsItem.createdAt)}</Typography>
                     <Typography variant='body1'>Status: {savingsItem.status}</Typography>
