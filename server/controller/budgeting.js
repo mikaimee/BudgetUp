@@ -31,7 +31,7 @@ const createTest = async (req, res) => {
 const getTestByUser = async (req, res) => {
     try{
         const { _id } = req.user
-        const budgetingsByUser = await Budgeting.find({ userId: _id })
+        const budgetingsByUser = await Budgeting.find({ userId: _id }).populate('categories.categoryId').exec()
         return res.status(200).json({ budgetingsByUser })
     }
     catch (error) {
