@@ -15,6 +15,8 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
     const queryClient = useQueryClient()
     const userState = useSelector((state) => state.user)
 
+    console.log('Selected Budget: ', selectedBudget)
+
     const initialBudgetData = {
         name:'',
         startDate:'',
@@ -22,7 +24,7 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
         totalAmount: 0,
         categories:[],
         remainingAmount: 0,
-        status: '',
+        status: 'Yet to Start',
         goals: [],
         notes: '',
         budgetType: '',
@@ -75,7 +77,7 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                 }
 
                 updateMutate({
-                    budgetId: selectedBudget._id,
+                    bugdetId: selectedBudget._id,
                     updatedBudgetData,
                     token: userState?.userInfo?.token
                 })
@@ -93,7 +95,7 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                     ...budgetData,
                 }
 
-                const result = await createMutate(createdBudgetData)
+                createMutate(createdBudgetData)
                 setBudgetData(initialBudgetData)
             }
             catch (error) {
@@ -126,8 +128,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                     />
                     <TextField
                         variant='outlined'
-                        margin='normal'
-                        required
                         fullWidth
                         id='startDate'
                         label="Start Date"
@@ -139,7 +139,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                     <TextField
                         variant='outlined'
                         margin='normal'
-                        required
                         fullWidth
                         id='endDate'
                         label="End Date"
@@ -151,7 +150,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                     <TextField
                         variant='outlined'
                         margin='normal'
-                        required
                         fullWidth
                         id='totalAmount'
                         label="Total Amount"
@@ -163,7 +161,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                     <TextField
                         variant='outlined'
                         margin='normal'
-                        required
                         fullWidth
                         id='remainingAmount'
                         label="Remaining Amount (optional)"
@@ -193,7 +190,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                     <FormControl variant="outlined" fullWidth margin="normal">
                         <InputLabel id="status-label">Budget Type</InputLabel>
                         <Select
-                            required
                             labelId="status-label"
                             id="status"
                             name="status"

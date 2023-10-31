@@ -39,8 +39,6 @@ const Budget = () => {
         setSelectedBudget(null)
     }
 
-    console.log("BUDGET: ", budgetData)
-
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
@@ -50,7 +48,7 @@ const Budget = () => {
             </Grid>
             <Grid item xs={12} md={12}>
                 <Paper sx={paperStyle}>
-                    <CreateBudget selectedBudget={selectedBudget} onEditCancel={handleEditCancel}/>
+                    <CreateBudget selectedBudget={selectedBudget} onEditCancel={handleEditCancel} />
                 </Paper>
             </Grid>
         </Grid>

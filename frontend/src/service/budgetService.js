@@ -62,7 +62,7 @@ export const updateBudget = async ({ bugdetId, updatedBudgetData, token }) => {
         }
         const response = await axios.put(`http://localhost:8000/budgeting/${bugdetId}`, updatedBudgetData, config)
         if (response.status === 200) {
-            return response.data.budget
+            return response.data
         }
         else {
             throw new Error(`Update failed with status code: ${response.status}`)

@@ -55,7 +55,7 @@ export const useUpdateSavingsMutation = (queryClient, onEditCancel) => {
                     onEditCancel()
                 }
                 else {
-                    toast.error('Failed to update income')
+                    toast.error('Failed to update savings')
                 }
             },
             onError: (error) => {

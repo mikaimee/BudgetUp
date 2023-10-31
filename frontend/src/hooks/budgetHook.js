@@ -40,8 +40,8 @@ export const useGetBudgetByUser = (token) => {
 
 export const useUpdateBudgetMutation = (queryClient, onEditCancel) => {
     return useMutation(
-        ({ budgetId, updatedBudgetData, token }) => {
-            return updateBudget({ budgetId, updatedBudgetData, token})
+        ({ bugdetId, updatedBudgetData, token }) => {
+            return updateBudget({ bugdetId, updatedBudgetData, token })
         },
         {
             onSuccess: (data) => {
