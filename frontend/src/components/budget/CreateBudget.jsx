@@ -15,8 +15,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
     const queryClient = useQueryClient()
     const userState = useSelector((state) => state.user)
 
-    console.log('Selected Budget: ', selectedBudget)
-
     const initialBudgetData = {
         name:'',
         startDate:'',
@@ -105,6 +103,13 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
         }
     }
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString)
+        const year = date.getFullYear()
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const day = date.getDate().toString().padStart(2, '0')
+        return `${year}-${month}-${day}`
+    }
 
     return (
         <Container component='main' maxWidth='xs'>
@@ -133,7 +138,7 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                         label="Start Date"
                         name='startDate'
                         type="date"
-                        value={budgetData.startDate}
+                        value={isUpdateMode ? formatDate(budgetData.startDate) : budgetData.startDate}
                         onChange={(e)=> setBudgetData({ ...budgetData, startDate: e.target.value })}
                     />
                     <TextField
@@ -144,7 +149,7 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                         label="End Date"
                         name='endDate'
                         type="date"
-                        value={budgetData.endDate}
+                        value={isUpdateMode ? formatDate(budgetData.endDate) : budgetData.endDate}
                         onChange={(e)=> setBudgetData({ ...budgetData, endDate: e.target.value })}
                     />
                     <TextField

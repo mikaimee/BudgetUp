@@ -70,7 +70,7 @@ const SavingsList = ({ setSelectedSavings, data}) => {
     // Function to handle delete button
     const handleDelete = (savingsId) => {
         // Show confirmation before proceeding with deletion
-        const confirmed = window.confirm("Are you sure you want to delete this income?")
+        const confirmed = window.confirm("Are you sure you want to delete this savings?")
         if (confirmed) {
             deleteMutate({ savingsId, token: userState?.userInfo?.token })
         }

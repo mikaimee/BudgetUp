@@ -5,6 +5,7 @@ import { useGetBudgetByUser } from '../../hooks/budgetHook'
 
 import BudgetTable from '../../components/budget/BudgetTable'
 import CreateBudget from '../../components/budget/CreateBudget'
+import BudgetGoals from '../../components/budget/BudgetGoals'
 
 import { Box, CssBaseline, Container, Paper, Grid, Typography, Link, Divider, Toolbar } from '@mui/material'
 
@@ -43,12 +44,17 @@ const Budget = () => {
         <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
                 <Paper sx={paperStyle}>
-                    <BudgetTable setSelectedBudget={setSelectedBudget} data={budgetData}/>
+                    <BudgetTable setSelectedBudget={setSelectedBudget} data={budgetData} />
                 </Paper>
             </Grid>
             <Grid item xs={12} md={12}>
                 <Paper sx={paperStyle}>
                     <CreateBudget selectedBudget={selectedBudget} onEditCancel={handleEditCancel} />
+                </Paper>
+            </Grid>
+            <Grid item xs={12} md={12}>
+                <Paper sx={paperStyle}>
+                    <BudgetGoals budgetData={budgetData} />
                 </Paper>
             </Grid>
         </Grid>

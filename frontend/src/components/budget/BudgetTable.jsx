@@ -1,4 +1,7 @@
 import React, { useState, useEffect} from 'react'
+import { useSelector } from 'react-redux'
+import { useQueryClient } from '@tanstack/react-query'
+import { useDeleteBudgetMutation } from '../../hooks/budgetHook'
 
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 
@@ -14,7 +17,24 @@ const formatAmount = (amount) => {
 
 const BudgetTable = ({ data, setSelectedBudget }) => {
 
+    const queryClient = useQueryClient()
+    const userState = useSelector((state) => state.user)
+
+    // Delete function
+    const { mutate: deleteMutate } = useDeleteBudgetMutation(queryClient)
+
     data.sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
+
+    // Function to handle delete button
+    const handleDelete = (budgetId) => {
+        console.log('Attempting to delete budget with ID:', budgetId)
+        // Show confirmation
+        const confirmed = window.confirm("Are you sure you want to delete this budget? ")
+        if (confirmed) {
+            console.log('Deletion confirmed for budget with ID:', budgetId)
+            deleteMutate({ budgetId, token: userState?.userInfo?.token })
+        }
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -50,12 +70,11 @@ const BudgetTable = ({ data, setSelectedBudget }) => {
                         <TableCell>{budget.bugetType|| 'N/A'}</TableCell>
                         <TableCell>{budget.notes|| 'No notes'}</TableCell>
                         <TableCell>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                onClick={() => setSelectedBudget(budget)}
-                            >
+                            <Button onClick={() => setSelectedBudget(budget)}>
                                 Edit
+                            </Button>
+                            <Button onClick={() => handleDelete(budget._id)} >
+                                Delete
                             </Button>
                         </TableCell>
                     </TableRow>

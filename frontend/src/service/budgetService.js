@@ -62,7 +62,7 @@ export const updateBudget = async ({ bugdetId, updatedBudgetData, token }) => {
         }
         const response = await axios.put(`http://localhost:8000/budgeting/${bugdetId}`, updatedBudgetData, config)
         if (response.status === 200) {
-            return response.data
+            return response.data.budget
         }
         else {
             throw new Error(`Update failed with status code: ${response.status}`)
@@ -78,14 +78,14 @@ export const updateBudget = async ({ bugdetId, updatedBudgetData, token }) => {
     }
 }
 
-export const deleteBudget = async ({ bugdetId, token }) => {
+export const deleteBudget = async ({ budgetId, token }) => {
     try {
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        const response = await axios.delete(`http://localhost:8000/budgeting/${bugdetId}`, config)
+        const response = await axios.delete(`http://localhost:8000/budgeting/${budgetId}`, config)
         return response.data
     }
     catch (err) {
@@ -94,6 +94,81 @@ export const deleteBudget = async ({ bugdetId, token }) => {
         } 
         else {
             throw new Error(`Delete request failed: ${err.message}`);
+        }
+    }
+}
+
+export const addGoalsToBudget = async ({ budgetId, goalData, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.put(`http://localhost:8000/budgeting/${budgetId}/addGoals`, goalData, config)
+        if (response.status === 200) {
+            return response.data.budgeting
+        }
+        else {
+            throw new Error(`Adding Goals failed: ${response.data.error}`)
+        }
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Adding failed: ${err.response.data.message}`);
+        } 
+        else {
+            throw new Error(`Add request failed: ${err.message}`);
+        }
+    }
+}
+
+export const updateGoal = async ({ budgetId, goalId, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.put(`http://localhost:8000/budgeting/${budgetId}/${goalId}`, config)
+        if (response.status === 200) {
+            return response.data.budget
+        }
+        else {
+            throw new Error(`Adding Goals failed: ${response.data.error}`)
+        }
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Updating failed: ${err.response.data.message}`);
+        } 
+        else {
+            throw new Error(`Updating request failed: ${err.message}`);
+        }
+    }
+}
+
+export const deleteGoal = async ({ budgetId, goalId, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.delete(`http://localhost:8000/budgeting/${budgetId}/${goalId}`, config)
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            throw new Error(`Deleting Goals failed: ${response.data.error}`)
+        }
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Deleting failed: ${err.response.data.message}`);
+        } 
+        else {
+            throw new Error(`Deleting request failed: ${err.message}`);
         }
     }
 }
