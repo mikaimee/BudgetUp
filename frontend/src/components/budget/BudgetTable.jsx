@@ -95,6 +95,14 @@ const BudgetTable = ({ data, setSelectedBudget }) => {
         }
     }
 
+    // Function to calculate remaining amount for budget
+    const calculateRemainingAmount = (budget) => {
+        const totalAmount = parseFloat(budget.totalAmount) || 0
+        const allocatedAmounts = budget.categories.map((c) => parseFloat(c.allocatedAmount) || 0)
+        const sumAllocatedAmounts = allocatedAmounts.reduce((total, amount) => total + amount, 0)
+        return totalAmount - sumAllocatedAmounts
+    }
+
     return (
         <TableContainer component={Paper}>
         <Table>
@@ -167,7 +175,7 @@ const BudgetTable = ({ data, setSelectedBudget }) => {
                                 </DialogActions>
                             </Dialog>
                         </TableCell>
-                        <TableCell>${budget.remainingAmount|| 'N/A'}</TableCell>
+                        <TableCell>${formatAmount(calculateRemainingAmount(budget)) || 'N/A'}</TableCell>
                         <TableCell>{budget.status|| 'N/A'}</TableCell>
                         <TableCell>{budget.bugetType|| 'N/A'}</TableCell>
                         <TableCell>
