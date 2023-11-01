@@ -21,7 +21,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
         endDate: '',
         totalAmount: 0,
         categories:[],
-        remainingAmount: 0,
         status: 'Yet to Start',
         goals: [],
         notes: '',
@@ -162,17 +161,6 @@ const CreateBudget = ({ selectedBudget, onEditCancel}) => {
                         type="number"
                         value={budgetData.totalAmount}
                         onChange={(e)=> setBudgetData({ ...budgetData, totalAmount: parseFloat(e.target.value) })}
-                    />
-                    <TextField
-                        variant='outlined'
-                        margin='normal'
-                        fullWidth
-                        id='remainingAmount'
-                        label="Remaining Amount (optional)"
-                        name='remainingAmount'
-                        type="number"
-                        value={budgetData.remainingAmount}
-                        onChange={(e)=> setBudgetData({ ...budgetData, remainingAmount: parseFloat(e.target.value) })}
                     />
                     <FormControl variant="outlined" fullWidth margin="normal">
                         <InputLabel id="status-label">Status</InputLabel>
