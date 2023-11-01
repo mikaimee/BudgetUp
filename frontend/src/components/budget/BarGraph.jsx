@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { ResponsiveBar } from "@nivo/bar"
 import { useGetExpensesByUser } from '../../hooks/expenseHook'

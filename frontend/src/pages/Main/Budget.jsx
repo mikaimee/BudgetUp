@@ -7,6 +7,7 @@ import BudgetTable from '../../components/budget/BudgetTable'
 import CreateBudget from '../../components/budget/CreateBudget'
 import BudgetGoals from '../../components/budget/BudgetGoals'
 import BarGraph from '../../components/budget/BarGraph'
+import CategoryAllocationBar from '../../components/budget/CategoryAllocationBar'
 
 import { Box, CssBaseline, Container, Paper, Grid, Typography, Link, Divider, Toolbar } from '@mui/material'
 
@@ -61,6 +62,11 @@ const Budget = () => {
             <Grid item xs={12} md={12}>
                 <Paper sx={paperStyle}>
                     <BarGraph budgetData={budgetData} />
+                </Paper>
+            </Grid>
+            <Grid item xs={12} md={12}>
+                <Paper sx={paperStyle}>
+                    <CategoryAllocationBar budgetData={budgetData} />
                 </Paper>
             </Grid>
         </Grid>
