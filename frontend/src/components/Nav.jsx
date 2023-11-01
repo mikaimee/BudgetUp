@@ -1,6 +1,10 @@
 import React from 'react'
+import { logout } from '../store/user'
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 
 import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -9,8 +13,17 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import SaveIcon from '@mui/icons-material/Save'
 import PaymentsIcon from '@mui/icons-material/Payments'
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Nav = ({ handleNavItemClick }) => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const logoutHandler = () => {
+        dispatch(logout())
+        navigate('/')
+    }
 
     return (
         <List>
@@ -43,6 +56,13 @@ const Nav = ({ handleNavItemClick }) => {
                     <PaymentsIcon />
                 </ListItemIcon>
                 <ListItemText primary="Budget" />
+            </ListItemButton>
+            <Divider />
+            <ListItemButton onClick={logoutHandler}>
+                <ListItemIcon>
+                    <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
             </ListItemButton>
         </List>
     )
