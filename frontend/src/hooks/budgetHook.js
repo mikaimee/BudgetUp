@@ -4,8 +4,8 @@ import {
     updateBudget,
     deleteBudget,
     addGoalsToBudget,
-    updateGoal,
-    deleteGoal
+    deleteGoal,
+    addCategoryToBudget
 } from '../service/budgetService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
@@ -130,6 +130,35 @@ export const useDeleteGoalMutation = (queryClient) => {
             },
             onError: (error) => {
                 toast.error('Error deleting goal', error.message)
+                console.error(error)
+            }
+        }
+    )
+}
+
+export const useAddCategoryMutation = (queryClient) => {
+    return useMutation(
+        ({ budgetId, categoryData, token }) => {
+            const parsedAmount = parseFloat(categoryData.allocatedAmount)
+            if (isNaN(parsedAmount)) {
+                throw new Error('Invalid amount');
+            }
+            categoryData.allocatedAmount = parsedAmount
+            return addCategoryToBudget({ budgetId, categoryData, token })
+        },
+        {
+            onSuccess: (data) => {
+                if (data) {
+                    queryClient.invalidateQueries('budgetsByUser')
+                    console.log('Updated Budget: ', data)
+                    toast.success('Added Category successfully')
+                }
+                else {
+                    toast.error('Failed to add category')
+                }
+            },
+            onError: (error) => {
+                toast.error('Error adding category', error.message)
                 console.error(error)
             }
         }

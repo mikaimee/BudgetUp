@@ -17,7 +17,9 @@ router.route('/:budgetId/addGoals')
     .put(protection.authProtect, tController.addGoalToBudgeting)
 
 router.route('/:budgetId/:goalId')
-    .put(protection.authProtect, tController.updateGoals)
     .delete(protection.authProtect, tController.deleteGoals)
+
+router.route('/addCategory/:budgetId')
+    .put(protection.authProtect, tController.addCategoryToBudget)
 
 module.exports = router

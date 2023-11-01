@@ -80,7 +80,7 @@ const addGoalToBudgeting = async (req, res) => {
         const budgeting = await Budgeting.findById(budgetId)
 
         if (!budgeting) {
-            return res.status(400),json({ error: 'Budget does not exist' })
+            return res.status(400).json({ error: 'Budget does not exist' })
         }
         budgeting.goals.push({ description, targetAmount })
         await budgeting.save()
@@ -90,42 +90,6 @@ const addGoalToBudgeting = async (req, res) => {
     catch (error) {
         console.error(error)
         res.status(500).json({ error: "An error occured while adding goals"})
-    }
-}
-
-const updateGoals = async (req, res) => {
-    try {
-        const { budgetId, goalId } = req.params
-        const { description, targetAmount } = req.body
-
-        // Find the budget by its ID
-        const budget = await Budgeting.findById(budgetId)
-
-        // Check is budget exists
-        if (!budget) {
-            return res.status(404).json({ messag: 'Budget not found' })
-        }
-
-        // Find index of the goals to update within goals array
-        const goalIndex = budget.goals.findIndex(goal => goal._id.toString() === goalId)
-
-        // Check if goal exists
-        if (goalIndex === -1) {
-            return res.status(404).json({ error: 'Goal not found' });
-        }
-
-        // Update the goal
-        budget.goals[goalIndex].description = description
-        budget.goals[goalIndex].targetAmount = targetAmount
-
-        // Save updated budget
-        await budget.save()
-
-        return res.status(200).json({ message: 'Goal updated successfully', budget })
-    }
-    catch (error) {
-        console.error(error)
-        res.status(500).json({ error: "An error occured while updating goals"})
     }
 }
 
@@ -152,12 +116,33 @@ const deleteGoals = async (req, res) => {
     }
 }
 
+const addCategoryToBudget = async (req, res) => {
+    try {
+        const { budgetId } = req.params
+        const { categoryId, allocatedAmount } = req.body
+
+        const budgeting = await Budgeting.findById(budgetId)
+
+        if (!budgeting) {
+            return res.status(400).json({ error: 'Budget does not exist' })
+        }
+        budgeting.categories.push({ categoryId, allocatedAmount })
+        await budgeting.save()
+
+        return res.status(200).json({ budgeting })
+    }
+    catch (error) {
+        console.error(error)
+        res.status(500).json({ error: "An error occured while adding categories"})
+    }
+}
+
 module.exports = {
     createTest,
     getTestByUser,
     updateBudgetings,
     deleteBudgetings,
     addGoalToBudgeting,
-    updateGoals,
-    deleteGoals
+    deleteGoals,
+    addCategoryToBudget
 }

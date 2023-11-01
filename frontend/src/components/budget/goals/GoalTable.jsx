@@ -20,13 +20,12 @@ const GoalTable = ({ budgetData }) => {
     const queryClient = useQueryClient()
     const userState = useSelector((state) => state.user)
 
-    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
-
     const initialGoalData = {
         description: '',
         targetAmount: 0
     }
 
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
     const [goalData, setGoalData] = useState(initialGoalData)
     const [selectedBudgetIndex, setSelectedBudgetIndex] = useState(null)
     const [selectedGoalIndex, setSelectedGoalIndex] = useState(null)

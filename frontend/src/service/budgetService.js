@@ -123,31 +123,6 @@ export const addGoalsToBudget = async ({ budgetId, goalData, token }) => {
     }
 }
 
-export const updateGoal = async ({ budgetId, goalId, token }) => {
-    try {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const response = await axios.put(`http://localhost:8000/budgeting/${budgetId}/${goalId}`, config)
-        if (response.status === 200) {
-            return response.data.budget
-        }
-        else {
-            throw new Error(`Adding Goals failed: ${response.data.error}`)
-        }
-    }
-    catch (err) {
-        if (err.response && err.response.data.message) {
-            throw new Error(`Updating failed: ${err.response.data.message}`);
-        } 
-        else {
-            throw new Error(`Updating request failed: ${err.message}`);
-        }
-    }
-}
-
 export const deleteGoal = async ({ budgetId, goalId, token }) => {
     try {
         const config = {
@@ -169,6 +144,31 @@ export const deleteGoal = async ({ budgetId, goalId, token }) => {
         } 
         else {
             throw new Error(`Deleting request failed: ${err.message}`);
+        }
+    }
+}
+
+export const addCategoryToBudget = async ({ budgetId, categoryData, token }) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await axios.put(`http://localhost:8000/budgeting/addCategory/${budgetId}`, categoryData, config)
+        if (response.status === 200) {
+            return response.data.budgeting
+        }
+        else {
+            throw new Error(`Adding Category failed: ${response.data.error}`)
+        }
+    }
+    catch (err) {
+        if (err.response && err.response.data.message) {
+            throw new Error(`Adding failed: ${err.response.data.message}`);
+        } 
+        else {
+            throw new Error(`Add request failed: ${err.message}`);
         }
     }
 }
