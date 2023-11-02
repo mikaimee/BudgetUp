@@ -13,12 +13,12 @@ Welcome to My Budget Application! Manage your finances like a pro with this user
 
 🧾 **Budget, Expense, Income Tracking:** Add, edit, and remove budgets, expenses, and incomes. Keep a record of financial details such as budget name, allocated amounts, expenses, and categories.
 
-📈 **Financial Insights:** Gain insights into your financial habits with graphical representations:
-  - **Yearly Budget Progress:** Visualize the progress of your budgets and expenses over the year.
-  - **Category Allocation Bar:** Compare your expenses with budget allocations by category.
-  - **Monthly Expense Trends:** Track monthly expenses with interactive graphs.
-
 🎯 **Financial Goals:**: Set and track your financial goals
+
+📈 **Financial Insights:** Gain insights into your financial habits with graphical representations:
+  - Yearly Budget Progress: Visualize the progress of your budgets and expenses over the year.
+  - Category Allocation Bar: Compare your expenses with budget allocations by category.
+  - Monthly Expense Trends: Track monthly expenses with interactive graphs.
 
 
 ## Technologies Used
@@ -31,7 +31,7 @@ Welcome to My Budget Application! Manage your finances like a pro with this user
 
 📡 **Node.js:** Power the server-side logic and handle requests from the front-end.
 
-🔐 **User Authentication:** Implement user authentication and authorization to secure your financial data.
+🔐 **User Authentication:** Implement user authentication and authorization using JWT (JSON Web Tokens) to secure your financial data.
 
 📊 **Data Visualization:** Utilize Nivo to create interactive financial graphs and charts.
 
