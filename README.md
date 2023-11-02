@@ -2,10 +2,7 @@
 
 Welcome to My Budget Application! Manage your finances like a pro with this user-friendly budget tool. Keep track of your income, expenses, savings, and financial goals, all in one place.
 
-<video width="320" height="240" controls>
-  <source src="videos/budget.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/mikaimee/BudgetUp/assets/105011734/d611d71a-40c6-4956-b9ee-518e9bbc614e
 
 ## Features
 
