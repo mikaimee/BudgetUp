@@ -38,6 +38,6 @@ Welcome to My Budget Application! Manage your finances like a pro with this user
 
 ## Currently Working On
 
-📈 **Additional Insights:** We are adding more charts and insights to give you a better view of your financial data.
+📈 **Additional Insights:** I am adding more charts and insights to give you a better view of your financial data.
 
 
