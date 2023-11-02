@@ -32,7 +32,7 @@ const TotalExpense = ({ expenseData  }) => {
     return (
         <div>
             <h2>Total Expenses for {currentYear} </h2>
-            <div style={{ width: '600px', height: '400px' }}>
+            <div style={{ width: '600px', height: '300px' }}>
                 <ResponsiveLine
                     data={chartData}
                     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}

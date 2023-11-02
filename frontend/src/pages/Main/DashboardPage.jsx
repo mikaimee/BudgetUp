@@ -60,30 +60,42 @@ const DashboardPage = () => {
         return <div>Error fetching data</div>
     }
 
+    const currentYear = new Date().getFullYear()
+
 
     return (
         <Grid container spacing={3}>
-            <Typography variant='h3'>
-                Welcome {userState.userInfo.firstName}
+            <Typography variant="h4" align="center" style={{ marginTop: '20px' }}>
+                Welcome {userState.userInfo.firstName}!  
+                Take a look at your financial summary for {currentYear}
             </Typography>
-            <Grid item xs={10} md={11.5}>
-                <Paper sx={paperStyle}>
-                    <IncExpBar incomeData={incomeData} expenseData={expenseData} />
-                </Paper>
-                <Paper sx={paperStyle}>
-                    <TotalIncome incomeData={incomeData} />
-                </Paper>
-                <Paper sx={paperStyle}>
-                    <TotalExpense expenseData={expenseData} />
-                </Paper>
+            <Grid item xs={12} md={11.5}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ width: '50%', height: '100%', marginRight: '10px' }}>
+                        <Paper sx={paperStyle}>
+                            <IncExpBar incomeData={incomeData} expenseData={expenseData} />
+                        </Paper>
+                    </div>
+                    <div style={{ width: '50%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <Paper sx={paperStyle} style={{marginBottom: '10px'}}>
+                            <TotalIncome incomeData={incomeData} />
+                        </Paper>
+                        <Paper sx={paperStyle}>
+                            <TotalExpense expenseData={expenseData} />
+                        </Paper>
+                    </div>
+                </div>
             </Grid>
             <Grid item xs={10} md={11.5}>
-                <Paper sx={paperStyle}>
-                    <YearlyExpensePie data={expenseData} />
-                </Paper>
-                <Paper sx={paperStyle}>
-                    <BarGraph budgetData={budgetData} />
-                </Paper>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <Paper sx={paperStyle} style={{width: '50%', marginRight: '10px'}}>
+                        <YearlyExpensePie data={expenseData} />
+                    </Paper>
+                    <Paper sx={paperStyle} style={{width: '50%'}}>
+                        <BarGraph budgetData={budgetData} />
+                    </Paper>
+                </div>
+                
             </Grid>
             <Grid item xs={10} md={11.5}>
                 <Paper sx={paperStyle}>

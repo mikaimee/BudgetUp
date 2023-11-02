@@ -54,7 +54,7 @@ const IncExpBar = ({ incomeData, expenseData }) => {
     return (
         <div>
             <h3>Income and Expense in {currentYear}</h3>
-            <div style={{ height: '400px' }}>
+            <div style={{ height: '725px', width: '600px' }}>
                 <ResponsiveBar {...chartSettings} />
             </div>
         </div>
