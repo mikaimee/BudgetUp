@@ -5,7 +5,7 @@ Welcome to My Budget Application! Manage your finances like a pro with this user
 <video width="320" height="240" controls>
   <source src="videos/budget.mp4" type="video/mp4">
   Your browser does not support the video tag.
-</vide
+</video>
 
 ## 📌 Features
 
