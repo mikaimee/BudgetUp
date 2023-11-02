@@ -1,7 +1,7 @@
 import React from 'react'
 import { logout } from '../store/user'
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom"
+import { useDispatch } from 'react-redux'
 
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
